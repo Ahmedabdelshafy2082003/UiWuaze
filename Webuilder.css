@@ -1,0 +1,253 @@
+/* * UI-WUAZE STUDIO | ADVANCED DESIGN SYSTEM
+ * Architecture: BEM (Block-Element-Modifier) & CSS Variables
+ */
+
+:root {
+    /* Color Palette - Design Tokens */
+    --bg-app: #09090b;
+    --bg-sidebar: #121214;
+    --bg-card: #1c1c1f;
+    --accent: #6c05eb;
+    --accent-hover: #5804c2;
+    --text-main: #f4f4f5;
+    --text-dim: #a1a1aa;
+    --border: #27272a;
+    --danger: #ef4444;
+    
+    /* Layout Constants */
+    --sidebar-width: 300px;
+    --header-height: 65px;
+    --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-app);
+    color: var(--text-main);
+    overflow: hidden;
+    height: 100vh;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* --- Header --- */
+#top-bar {
+    height: var(--header-height);
+    background: var(--bg-sidebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+}
+
+.logo-icon {
+    background: var(--accent);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+/* Ensure the parent container allows smooth layout recalculation */
+#main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+}
+
+/* The Sliding Sidebar */
+.sidebar {
+    width: var(--sidebar-width);
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+    opacity: 1;
+    overflow: hidden; /* Important: keeps content from bleeding out during slide */
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+/* The Collapsed State */
+.sidebar.collapsed {
+    width: 0 !important;
+    opacity: 0;
+    border: none;
+}
+
+/* Ensure content inside doesn't jump */
+.sidebar-content {
+    width: var(--sidebar-width);
+    overflow-x: hidden;
+}
+
+#canvas-area {
+    flex: 1;
+    background: #000;
+    position: relative;
+    overflow: auto;
+    padding: 60px;
+    display: flex;
+    justify-content: center;
+    background-image: radial-gradient(var(--border) 1px, transparent 1px);
+    background-size: 24px 24px;
+    transition: all 0.3s ease;
+}
+
+/* --- Canvas Elements --- */
+#canvas {
+    background: white;
+    width: 1000px;
+    min-height: 1200px;
+    position: relative;
+    box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3);
+}
+
+.element {
+    position: absolute;
+    cursor: move;
+    user-select: none;
+    outline: 1px solid transparent;
+}
+
+.element:hover { outline: 1px solid var(--accent); }
+.element.selected { outline: 2px solid var(--accent) !important; }
+
+/* --- Component Library --- */
+.lib-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 16px;
+}
+
+.lib-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: 12px;
+    border-radius: var(--radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    transition: all 0.2s ease;
+}
+
+.lib-item:hover {
+    background: var(--border);
+    border-color: var(--accent);
+}
+
+/* --- Property Inspector --- */
+.prop-group {
+    padding: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.prop-group legend {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+}
+
+input[type="color"] {
+    width: 100%;
+    height: 30px;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* --- Buttons --- */
+.btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn:hover { background: var(--accent-hover); }
+
+/* --- Modals --- */
+.custom-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: var(--bg-sidebar);
+    padding: 32px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    width: 320px;
+}
+
+/* Ensure main content adjusts smoothly */
+#main {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.sidebar-header {
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+#toggle-left-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#toggle-left-btn:hover {
+    color: var(--text-main);
+    border-color: var(--accent);
+}
+/* Style the new header buttons */
+.btn-toggle {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 8px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.btn-toggle:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+/* Ensure the canvas area responds when sidebars hide/show */
+#main {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - var(--header-height));
+    overflow: hidden;
+}
+
+#canvas-area {
+    flex: 1; /* This will automatically grow when sidebars collapse */
+    
+}

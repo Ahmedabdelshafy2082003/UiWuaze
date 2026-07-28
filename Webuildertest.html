@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ui-Wuaze Studio | Professional Desktop Builder</title>
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Cairo:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Courier+Prime&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="/manifest.json">
+
+    
+
+    <style>
+
+        :root {
+
+            --bg-dark: #09090b;
+
+            --sidebar-bg: #121214;
+
+            --card-bg: #1c1c1f;
+
+            --accent: #6c05eb;
+
+            --accent-hover: #2563eb;
+
+            --border: #2d2d30;
+
+            --text-main: #e4e4e7;
+
+            --text-dim: #a1a1aa;
+
+            --danger: #ef4444;
+
+            --success: #10b981;
+
+            --radius: 8px;
+
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+
+        }
+
+        * { box-sizing: border-box; transition: background 0.2s, border 0.2s; }
+
+        
+
+        body { 
+
+            margin: 0; 
+
+            font-family: 'Inter', sans-serif; 
+
+            background: var(--bg-dark); 
+
+            color: var(--text-main); 
+
+            overflow: hidden; 
+
+            height: 100vh; 
+
+        }
+
+        #app { display: flex; flex-direction: column; height: 100vh; }
+
+        
+
+        #top-bar { 
+
+            height: 65px; background: var(--sidebar-bg); border-bottom: 1px solid var(--border); 
+
+            display: flex; align-items: center; justify-content: space-between; padding: 0 25px; z-index: 1000;
+
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; }
+
+        .logo-icon { background: var(--accent); color: white; padding: 8px; border-radius: 8px; font-weight: bold; }
+
+        #main { display: flex; flex: 1; position: relative; overflow: hidden; }
+
+        .sidebar { 
+
+            width: 300px; background: var(--sidebar-bg); display: flex; flex-direction: column;
+
+            transition: all 0.3s ease; position: relative; z-index: 1010;
+
+        }
+
+        
+
+        #sidebar-left { border-right: 1px solid var(--border); }
+
+        #properties-panel { border-left: 1px solid var(--border); }
+
+        .sidebar.collapsed { width: 0; padding: 0; overflow: hidden; border: none; }
+
+        .sidebar-content { padding: 20px; overflow-y: auto; flex: 1; }
+
+        #canvas-area { 
+
+            flex: 1; background: #000; overflow: auto; padding: 60px; position: relative;
+
+            display: flex; justify-content: center;
+
+        }
+
+        /* تعديل الكانفاس ليناسب الكمبيوتر بشكل مثالي */
+
+        #canvas { 
+
+            background: white; 
+
+            width: 1200px; /* العرض القياسي */
+
+            min-height: 1500px; 
+
+            position: relative; 
+
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+
+            /* إضافة شبكة إرشادية لخلفية المحرر */
+
+            background-image: radial-gradient(#d1d1d1 1px, transparent 1px);
+
+            background-size: 20px 20px;
+
+        }
+
+        .element { position: absolute; min-width: 40px; min-height: 20px; cursor: move; touch-action: none; }
+
+        .element.selected { outline: 2px solid var(--accent); z-index: 999 !important; }
+
+        /* مقابض التحكم */
+
+        .resize-handle {
+
+            width: 12px; height: 12px; background: white; border: 2px solid var(--accent);
+
+            border-radius: 50%; position: absolute; display: none; z-index: 1000;
+
+        }
+
+        .element.selected .resize-handle { display: block; }
+
+        .nw { top: -6px; left: -6px; cursor: nw-resize; }
+
+        .ne { top: -6px; right: -6px; cursor: ne-resize; }
+
+        .sw { bottom: -6px; left: -6px; cursor: sw-resize; }
+
+        .se { bottom: -6px; right: -6px; cursor: se-resize; }
+
+        .el-controls-footer {
+
+            position: absolute; bottom: -40px; left: 50%; transform: translateX(-50%);
+
+            display: none; gap: 8px; z-index: 1001;
+
+        }
+
+        .element.selected .el-controls-footer { display: flex; }
+
+        .control-btn {
+
+            width: 30px; height: 30px; background: white; border-radius: 50%;
+
+            display: flex; align-items: center; justify-content: center; color: #333;
+
+            box-shadow: var(--shadow); cursor: move;
+
+        }
+
+        /* الطبقات */
+
+        .layer-item {
+
+            display: flex; align-items: center; justify-content: space-between;
+
+            padding: 10px; background: #1a1a1d; margin-bottom: 5px; border-radius: 6px;
+
+            font-size: 12px; cursor: pointer; border: 1px solid transparent;
+
+        }
+
+        .layer-item:hover { border-color: var(--accent); }
+
+        .layer-item.active { background: #2d2d30; border-left: 4px solid var(--accent); }
+
+        .layer-info { display: flex; align-items: center; gap: 8px; flex: 1; }
+
+        /* UI Components */
+
+        .prop-group { margin-bottom: 20px; background: var(--card-bg); padding: 15px; border-radius: var(--radius); }
+
+        .prop-group label { display: block; font-size: 11px; color: var(--text-dim); margin-bottom: 8px; text-transform: uppercase; }
+
+        
+
+        input[type="text"], input[type="number"], select {
+
+            width: 100%; background: #09090b; border: 1px solid var(--border);
+
+            color: white; padding: 8px; border-radius: 4px; font-size: 13px;
+
+        }
+
+        .lib-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .lib-item { 
+
+            background: var(--card-bg); border: 1px solid var(--border); 
+
+            padding: 12px; border-radius: var(--radius); cursor: pointer; 
+
+            text-align: center; font-size: 11px; display: flex; flex-direction: column; gap: 5px;
+
+        }
+
+        .lib-item:hover { border-color: var(--accent); background: #252529; }
+
+        .lib-item i { color: var(--accent); font-size: 16px; }
+
+        .btn { 
+
+            background: var(--accent); border: none; color: white; padding: 10px; 
+
+            border-radius: var(--radius); cursor: pointer; font-weight: 600; 
+
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+
+        }
+
+        /* Modal */
+
+        .custom-modal {
+
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
+
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); align-items: center; justify-content: center;
+
+        }
+
+        .modal-content { background: #1e293b; padding: 30px; border-radius: 20px; width: 350px; text-align: center; }
+
+        .inner-el { outline: none; transition: 0.2s; }
+
+        .card-el { padding: 20px; background: white; border: 1px solid #ddd; border-radius: 12px; height: 100%; }
+
+    </style>
+<link rel="stylesheet" href="https://unpkg.com/grapesjs/dist/css/grapes.min.css">
+<script src="https://unpkg.com/grapesjs"></script>
+<style>
+    /* Force GrapesJS to hide its default UI to respect our custom wrapper */
+    .gjs-cv-canvas { top: 0; width: 100%; height: 100%; }
+    .gjs-dashed * { outline: none !important; }
+    /* Match Ahmed's accent color for the GrapesJS selection box */
+    .gjs-cv-canvas .gjs-highlighter, .gjs-cv-canvas .gjs-highlighter-sel {
+        outline: 2px solid var(--accent) !important;
+    }
+</style>
+
+</head>
+
+<body>
+
+<div id="app">
+
+    <div id="top-bar">
+
+        <div class="brand">
+
+            <button onclick="toggleSidebar('sidebar-left')" style="background:none; border:none; color:white; cursor:pointer;"><i class="fas fa-bars"></i></button>
+
+            <div class="logo-icon">STUDIO</div>
+
+            <div style="font-weight: 700;">Ui-Wuaze <span style="color:var(--accent)">PRO</span></div>
+
+        </div>
+
+        
+
+        <div style="display: flex; gap: 10px;">
+
+            <input type="file" id="importProject" style="display:none" onchange="loadProject(this)">
+
+            <button class="btn" style="background:#2d2d30" onclick="document.getElementById('importProject').click()"><i class="fas fa-upload"></i> Load</button>
+
+            <button class="btn" style="background:#2d2d30" onclick="saveProject()"><i class="fas fa-save"></i> Save</button>
+
+            <button class="btn" onclick="exportResponsiveHTML()"><i class="fas fa-file-export"></i> Export HTML</button>
+
+        </div>
+
+    </div>
+
+    <div id="main">
+
+        <div id="sidebar-left" class="sidebar">
+
+            <div class="sidebar-content">
+
+                <h4 style="font-size: 11px; color: var(--text-dim);">ELEMENTS LIBRARY</h4>
+
+                <div class="lib-grid">
+
+                    <div class="lib-item" onclick="addNewElement('title')"><i class="fas fa-heading"></i>Title</div>
+
+                    <div class="lib-item" onclick="addNewElement('text')"><i class="fas fa-font"></i>Text</div>
+
+                    <div class="lib-item" onclick="addNewElement('button')"><i class="fas fa-square"></i>Button</div>
+
+                    <div class="lib-item" onclick="addNewElement('card')"><i class="fas fa-id-card"></i>Card</div>
+
+                    <div class="lib-item" onclick="addNewElement('input')"><i class="fas fa-keyboard"></i>Input</div>
+
+                    <div class="lib-item" onclick="addNewElement('header')"><i class="fas fa-window-maximize"></i>Header</div>
+
+                    <div class="lib-item" onclick="document.getElementById('imageInput').click()"><i class="fas fa-image"></i>Image</div>
+
+                    <div class="lib-item" onclick="addNewElement('colorbox')"><i class="fas fa-fill-drip"></i>Box</div>
+
+                </div>
+
+                <input type="file" id="imageInput" hidden accept="image/*" onchange="handleFileSelect(this, 'image')">
+
+                
+
+                <h4 style="margin-top:30px; font-size: 11px; color: var(--text-dim);">LAYERS</h4>
+
+                <div id="layer-list"></div>
+
+            </div>
+
+        </div>
+
+        <div id="canvas-area">
+
+            <div id="canvas"></div>
+
+        </div>
+
+        <div id="properties-panel" class="sidebar">
+
+            <div class="sidebar-content">
+
+                <h4 style="font-size: 11px; color: var(--text-dim);">PROPERTIES</h4>
+
+                
+
+                <div id="no-selection-msg" style="text-align:center; padding:40px; color:var(--text-dim);">
+
+                    <i class="fas fa-mouse-pointer" style="font-size:24px; opacity:0.2"></i><br>Select element
+
+                </div>
+
+                <div id="element-controls" style="display:none;">
+
+                    <div class="prop-group">
+
+                        <label>Style & Color</label>
+
+                        <input type="color" id="elColor" oninput="updateElementStyle('color', this.value)">
+
+                        <label style="margin-top:10px">Background</label>
+
+                        <input type="color" id="elBg" oninput="updateElementStyle('backgroundColor', this.value)">
+
+                    </div>
+
+                    <div class="prop-group">
+
+                        <label>Spacing & Border</label>
+
+                        <label style="font-size:9px">Border Radius</label>
+
+                        <input type="range" min="0" max="50" oninput="updateElementStyle('borderRadius', this.value + 'px')">
+
+                        <label style="font-size:9px">Font Size</label>
+
+                        <input type="range" min="8" max="100" oninput="updateElementStyle('fontSize', this.value + 'px')">
+
+                    </div>
+
+                    <div style="display:flex; gap:10px">
+
+                        <button class="btn" style="flex:1; background:#333" onclick="duplicateEl()"><i class="fas fa-copy"></i></button>
+
+                        <button class="btn" style="flex:2; background:var(--danger)" onclick="deleteEl()"><i class="fas fa-trash"></i> Delete</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="saveModal" class="custom-modal">
+
+    <div class="modal-content">
+
+        <h3 style="color:white">Save Project</h3>
+
+        <input type="text" id="fileNameInput" placeholder="Project Name" style="margin:20px 0" class="modal-input">
+
+        <div style="display:flex; gap:10px">
+
+            <button onclick="closeSaveModal()" class="btn" style="background:#444; flex:1">Cancel</button>
+
+            <button id="confirmSaveBtn" class="btn" style="flex:1">Save</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    let selectedEl = null;
+
+    let history = [];
+
+    const canvas = document.getElementById('canvas');
+
+    // تهيئة المشروع
+
+    window.onload = () => {
+
+        updateLayers();
+
+    };
+
+    function toggleSidebar(id) { document.getElementById(id).classList.toggle('collapsed'); }
+
+    function makeInteractable(el) {
+
+        interact(el).draggable({
+
+            allowFrom: '.drag-handle, .element',
+
+            ignoreFrom: 'input, [contenteditable="true"], .resize-handle',
+
+            listeners: {
+
+                move(event) {
+
+                    let x = (parseFloat(el.dataset.x) || 0) + event.dx;
+
+                    let y = (parseFloat(el.dataset.y) || 0) + event.dy;
+
+                    el.style.transform = `translate(${x}px, ${y}px)`;
+
+                    el.dataset.x = x; el.dataset.y = y;
+
+                }
+
+            }
+
+        }).resizable({
+
+            edges: { left: '.nw, .sw', right: '.ne, .se', bottom: '.sw, .se', top: '.nw, .ne' },
+
+            listeners: {
+
+                move(event) {
+
+                    el.style.width = event.rect.width + 'px';
+
+                    el.style.height = event.rect.height + 'px';
+
+                    let x = (parseFloat(el.dataset.x) || 0) + event.deltaRect.left;
+
+                    let y = (parseFloat(el.dataset.y) || 0) + event.deltaRect.top;
+
+                    el.style.transform = `translate(${x}px, ${y}px)`;
+
+                    el.dataset.x = x; el.dataset.y = y;
+
+                }
+
+            }
+
+        });
+
+    }
+
+    function addNewElement(type, content = null) {
+
+        const el = document.createElement('div');
+
+        el.className = 'element';
+
+        el.id = 'el-' + Date.now();
+
+        el.dataset.type = type;
+
+        el.style.zIndex = '10';
+
+        el.style.left = '50px'; el.style.top = '50px';
+
+        // الـ UI الخاص بالعنصر
+
+        el.innerHTML = `
+
+            <div class="resize-handle nw"></div><div class="resize-handle ne"></div>
+
+            <div class="resize-handle sw"></div><div class="resize-handle se"></div>
+
+            <div class="el-controls-footer"><div class="control-btn drag-handle"><i class="fas fa-arrows-alt"></i></div></div>
+
+        `;
+
+        let inner = '';
+
+        if(type === 'title') inner = `<h2 class="inner-el" contenteditable="true" style="margin:0; font-size:32px;">New Title</h2>`;
+
+        else if(type === 'text') inner = `<p class="inner-el" contenteditable="true" style="margin:0; font-size:16px;">Click to edit text content...</p>`;
+
+        else if(type === 'button') inner = `<button class="inner-el" style="padding:10px 20px; background:var(--accent); color:white; border:none; border-radius:5px; cursor:pointer;">Click Me</button>`;
+
+        else if(type === 'input') inner = `<input type="text" class="inner-el" placeholder="Type here..." style="padding:10px; border:1px solid #ccc; border-radius:5px;">`;
+
+        else if(type === 'header') {
+
+            el.style.width = '100%'; el.style.left = '0';
+
+            inner = `<div class="inner-el" style="display:flex; justify-content:space-between; padding:20px; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,0.1); width:100%;"><b>LOGO</b><nav>Home | About</nav></div>`;
+
+        }
+
+        else if(type === 'image') inner = `<img src="${content}" class="inner-el" style="width:100%; display:block;">`;
+
+        else if(type === 'colorbox') inner = `<div class="inner-el" style="width:100px; height:100px; background:var(--accent); border-radius:8px;"></div>`;
+
+        else if(type === 'card') inner = `<div class="inner-el card-el"><h3 contenteditable="true">Card Title</h3><p contenteditable="true">Content goes here...</p></div>`;
+
+        el.insertAdjacentHTML('beforeend', inner);
+
+        canvas.appendChild(el);
+
+        
+
+        el.onmousedown = (e) => { e.stopPropagation(); selectElement(el); };
+
+        makeInteractable(el);
+
+        selectElement(el);
+
+        updateLayers();
+
+    }
+
+    function selectElement(el) {
+
+        if(selectedEl) selectedEl.classList.remove('selected');
+
+        selectedEl = el;
+
+        el.classList.add('selected');
+
+        
+
+        document.getElementById('no-selection-msg').style.display = 'none';
+
+        document.getElementById('element-controls').style.display = 'block';
+
+        
+
+        // تحديث قيم الـ Inputs في لوحة الخصائص
+
+        const inner = el.querySelector('.inner-el');
+
+        document.getElementById('elColor').value = rgbToHex(window.getComputedStyle(inner).color);
+
+        document.getElementById('elBg').value = rgbToHex(window.getComputedStyle(inner).backgroundColor);
+
+        
+
+        updateLayers();
+
+    }
+
+    function updateElementStyle(prop, val) {
+
+        if(selectedEl) {
+
+            selectedEl.querySelector('.inner-el').style[prop] = val;
+
+        }
+
+    }
+
+    function updateLayers() {
+
+        const list = document.getElementById('layer-list');
+
+        list.innerHTML = '';
+
+        const elements = Array.from(canvas.children).reverse();
+
+        elements.forEach(el => {
+
+            const item = document.createElement('div');
+
+            item.className = `layer-item ${selectedEl === el ? 'active' : ''}`;
+
+            item.innerHTML = `
+
+                <div class="layer-info"><i class="fas fa-layer-group"></i> ${el.dataset.type.toUpperCase()}</div>
+
+                <i class="fas fa-eye" style="opacity:0.5"></i>
+
+            `;
+
+            item.onclick = (e) => { e.stopPropagation(); selectElement(el); };
+
+            list.appendChild(item);
+
+        });
+
+    }
+
+    function deleteEl() {
+
+        if(selectedEl) {
+
+            selectedEl.remove();
+
+            selectedEl = null;
+
+            document.getElementById('element-controls').style.display = 'none';
+
+            document.getElementById('no-selection-msg').style.display = 'block';
+
+            updateLayers();
+
+        }
+
+    }
+
+    function duplicateEl() {
+
+        if(!selectedEl) return;
+
+        const clone = selectedEl.cloneNode(true);
+
+        clone.id = 'el-' + Date.now();
+
+        const x = (parseFloat(selectedEl.dataset.x) || 0) + 20;
+
+        const y = (parseFloat(selectedEl.dataset.y) || 0) + 20;
+
+        clone.style.transform = `translate(${x}px, ${y}px)`;
+
+        clone.dataset.x = x; clone.dataset.y = y;
+
+        clone.classList.remove('selected');
+
+        clone.onmousedown = (e) => { e.stopPropagation(); selectElement(clone); };
+
+        canvas.appendChild(clone);
+
+        makeInteractable(clone);
+
+        selectElement(clone);
+
+    }
+
+    function handleFileSelect(input, type) {
+
+        if(input.files && input.files[0]) {
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => addNewElement(type, e.target.result);
+
+            reader.readAsDataURL(input.files[0]);
+
+        }
+
+    }
+
+    function rgbToHex(rgb) {
+
+        if (!rgb || rgb === "transparent") return "#ffffff";
+
+        const vals = rgb.match(/\d+/g);
+
+        if(!vals) return "#ffffff";
+
+        return "#" + vals.slice(0,3).map(x => parseInt(x).toString(16).padStart(2, '0')).join("");
+
+    }
+
+    // Save & Load Logic
+
+    function saveProject() {
+
+        document.getElementById('saveModal').style.display = 'flex';
+
+        document.getElementById('confirmSaveBtn').onclick = () => {
+
+            const name = document.getElementById('fileNameInput').value || 'Project';
+
+            const data = { html: canvas.innerHTML, bg: canvas.style.background };
+
+            const blob = new Blob([JSON.stringify(data)], {type: 'application/json'});
+
+            const a = document.createElement('a');
+
+            a.href = URL.createObjectURL(blob);
+
+            a.download = name + '.json';
+
+            a.click();
+
+            closeSaveModal();
+
+        };
+
+    }
+
+    function loadProject(input) {
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+
+            const data = JSON.parse(e.target.result);
+
+            canvas.innerHTML = data.html;
+
+            Array.from(canvas.children).forEach(el => {
+
+                makeInteractable(el);
+
+                el.onmousedown = (ev) => { ev.stopPropagation(); selectElement(el); };
+
+            });
+
+            updateLayers();
+
+        };
+
+        reader.readAsText(input.files[0]);
+
+    }
+
+    function closeSaveModal() { document.getElementById('saveModal').style.display = 'none'; }
+
+    function exportResponsiveHTML() {
+
+        const clone = canvas.cloneNode(true);
+
+        clone.querySelectorAll('.resize-handle, .el-controls-footer').forEach(h => h.remove());
+
+        clone.querySelectorAll('.element').forEach(el => {
+
+            el.style.outline = 'none';
+
+            el.classList.remove('selected');
+
+            const inner = el.querySelector('.inner-el');
+
+            if(inner) inner.removeAttribute('contenteditable');
+
+        });
+
+        const html = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>
+
+            body { margin: 0; background: ${canvas.style.background || '#eee'}; display: flex; justify-content: center; }
+
+            .container { position: relative; width: 1200px; min-height: 100vh; background: white; overflow: hidden; }
+
+            .element { position: absolute; box-sizing: border-box; }
+
+            .inner-el { width: 100%; height: 100%; border: none; }
+
+            @media (max-width: 1200px) { .container { width: 100%; } }
+
+        </style></head><body><div class="container">${clone.innerHTML}</div></body></html>`;
+
+        
+
+        const blob = new Blob([html], {type: 'text/html'});
+
+        const a = document.createElement('a');
+
+        a.href = URL.createObjectURL(blob);
+
+        a.download = 'my-site.html';
+
+        a.click();
+
+    }
+
+    // إغلاق التحديد عند الضغط على الكانفاس
+
+    canvas.onmousedown = () => {
+
+        if(selectedEl) selectedEl.classList.remove('selected');
+
+        selectedEl = null;
+
+        document.getElementById('element-controls').style.display = 'none';
+
+        document.getElementById('no-selection-msg').style.display = 'block';
+
+        updateLayers();
+
+    }
+
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>

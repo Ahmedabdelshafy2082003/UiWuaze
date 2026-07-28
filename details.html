@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Component Details | Ui Wuaze Library</title>
+    <meta name="description" content="Explore and discover a wide range of free UI components and design resources at UI Wuaze Library. Elevate your web projects with modern, ready-to-use elements.">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ui.wuaze.com/library">
+<meta property="og:title" content="UI Wuaze Library | Explore and Discover UI Resources">
+<meta property="og:description" content="Access a comprehensive collection of free UI components and design tools. Simplified design for modern developers.">
+<meta property="og:image" content="https://i.top4top.io/p_3744fcc4y0.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UI Wuaze Library">
+<meta name="twitter:description" content="Explore and discover professional UI and design resources for free.">
+<meta name="twitter:image" content="https://i.top4top.io/p_3744fcc4y0.png">
+
+<link rel="icon" href="48x48.png" sizes="48x48" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="data.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    colors: { 
+                        brand: '#6336fa',      
+                        accent: '#d8ccff',     
+                        darkBg: '#0a0516',
+                        darkCard: '#1a1528'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .code-font { font-family: 'Fira Code', monospace; }
+     pre {
+    direction: ltr;
+    text-align: left;
+    white-space: pre-wrap;       /* أهم خاصية */
+    word-wrap: break-word;       /* للأمان الإضافي */
+    overflow-x: hidden;          /* منع السكرول الجانبي */
+}
+ .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #6336fa44; border-radius: 10px; }
+        #code-active-bg { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .verified-icon {
+            position: absolute;
+            bottom: 0px;
+            right: 0px;
+            width: 24px;
+            height: 24px;
+            z-index: 10;
+        }
+#code-output {
+    transition: opacity 0.2s ease; /* لتأثير التلاشي */
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* الألوان المطلوبة */
+.hl-selector { color: #d7ba7d !important; } /* الأصفر للمحددات والـ hover */
+.hl-tag      { color: #569cd6 !important; } /* الأزرق للتاجات HTML/CSS */
+.hl-attr     { color: #9cdcfe !important; } /* الأزرق الفاتح للـ attributes */
+.hl-property { color: #9cdcfe !important; } /* الأزرق الفاتح للـ CSS properties */
+.hl-value    { color: #ce9178 !important; } /* البرتقالي للقيم والنصوص */
+.hl-punct    { color: #d4d4d4 !important; } /* الرمادي للرموز */
+.hl-comment  { color: #6a9955 !important; } /* الأخضر للتعليقات */
+.hl-text { 
+    color: #ffffff !important; 
+}
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-slate-100 transition-colors duration-300 min-h-screen">
+
+<header class="bg-white/80 dark:bg-darkCard/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 relative overflow-hidden transition-transform hover:scale-110">
+                <img src="logo06.webp" 
+                     alt="UW Logo" 
+                     class="w-full h-full object-contain block">
+            </div>
+            
+
+        </div>
+
+<a id="back-link" href="https://ui.wuaze.com/library" class="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-brand transition-all group">
+    <div class="p-1.5 rounded-lg group-hover:bg-brand/10 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M15 19l-7-7 7-7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+    </div>
+    <span>Back to Library</span>
+</a>
+
+<script>
+    // تحديث الرابط برمجياً ليحتوي على الـ id الحالي
+    const currentId = new URLSearchParams(window.location.search).get('id');
+    if (currentId) {
+        document.getElementById('back-link').href = `library.html?scrollTo=${currentId}`;
+    }
+</script>
+
+    </nav>
+</header>
+
+
+    <main class="max-w-7xl mx-auto p-6 lg:p-12">
+        
+        <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+                <h1 id="design-title" class="text-3xl lg:text-4xl font-extrabold leading-tight">Loading...</h1>
+                <p class="text-slate-400 mt-2 font-medium">Asset Identifier: <span id="design-id-display" class="text-brand font-mono">#000</span></p>
+            </div>
+        </div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <div class="lg:col-span-5 bg-white dark:bg-darkCard rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 overflow-hidden lg:sticky lg:top-28">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                    <h2 class="font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2">
+                        <span class="flex h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                        Live Preview
+                    </h2>
+                    <span class="text-[10px] font-bold text-slate-400 border border-slate-200 dark:border-slate-700 px-3 py-1 rounded-full uppercase tracking-wider">Interactive</span>
+                </div>
+                <div class="h-[480px] bg-white flex items-center justify-center p-4">
+                    <iframe id="live-preview-frame" class="w-full h-full border-none"></iframe>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 bg-slate-950 rounded-[2.5rem] shadow-2xl overflow-hidden border border-slate-800">
+                <div class="p-6 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+                    <h2 class="font-bold text-slate-100 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        Source Code
+                    </h2>
+                    
+                    <div class="relative flex bg-slate-800 p-1 rounded-xl w-36 h-9 overflow-hidden">
+                        <div id="code-active-bg" class="absolute top-1 left-1 bottom-1 w-[calc(50%-4px)] bg-brand rounded-lg z-0"></div>
+                        <button onclick="switchCodeTab('html', 0)" id="btn-html" class="relative z-10 flex-1 text-[11px] font-bold text-white transition-colors">HTML</button>
+                        <button onclick="switchCodeTab('css', 1)" id="btn-css" class="relative z-10 flex-1 text-[11px] font-bold text-slate-400 transition-colors">CSS</button>
+                    </div>
+                </div>
+                
+                <div class="p-6 h-[480px] overflow-y-auto custom-scrollbar bg-slate-950/40">
+                    <pre id="code-output" class="code-font text-[13px] leading-relaxed"></pre>
+                </div>
+            </div>
+            <div class="lg:col-span-2 bg-white dark:bg-darkCard rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-slate-800 p-8 flex flex-col items-center text-center lg:sticky lg:top-28">
+                <div class="relative mb-6">
+                    <img id="pub-avatar" src="" class="w-24 h-24 rounded-full border-4 border-slate-50 dark:border-slate-800 shadow-md object-cover">
+                    <div id="verified-wrapper"></div>
+                </div>
+                
+                <h3 id="pub-name" class="font-bold text-slate-900 dark:text-slate-100 text-lg mb-1">...</h3>
+                <div id="verified-status-tag"></div>
+                
+                <div class="w-full space-y-3 mt-8">
+                    <button id="copy-btn" onclick="copyFullCode()" class="w-full py-4 bg-brand text-white rounded-2xl text-[11px] font-bold hover:brightness-110 transition-all shadow-lg shadow-brand/20">Copy Full Code</button>
+                    <button class="w-full py-4 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 rounded-2xl text-[11px] font-bold hover:bg-slate-100 transition-all border border-slate-100 dark:border-slate-700">Download Source</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+    // 1. إعداد الثيم (Dark/Light Mode)
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    }
+
+    // 2. جلب البيانات من الرابط (URL Parameters) - تم إصلاح التكرار هنا
+    const urlParams = new URLSearchParams(window.location.search);
+    const designId = parseInt(urlParams.get('id'));
+    const fromCat = urlParams.get('fromCat') || 'all';
+
+    // 3. تحديث رابط العودة برمجياً
+    const backLink = document.getElementById('back-link');
+    if (designId && backLink) {
+        backLink.href = `library.html?scrollTo=${designId}&cat=${fromCat}`;
+    }
+
+    // 4. جلب بيانات العنصر والناشر من ملف data.js
+    const currentDesign = projectData.designs.find(d => d.id === designId);
+    const currentPub = currentDesign ? projectData.publishers.find(p => p.id === currentDesign.pubId) : null;
+
+    // دالة تهيئة الصفحة وعرض البيانات
+    function initPage() {
+        if (!currentDesign || !currentPub) {
+            document.body.innerHTML = `<div class="flex h-screen items-center justify-center font-bold text-2xl text-slate-500">404 - Component Not Found</div>`;
+            return;
+        }
+
+        // توزيع البيانات على العناصر
+        document.getElementById('design-title').innerText = currentDesign.title;
+        document.getElementById('design-id-display').innerText = `#DSGN-${currentDesign.id}`;
+        document.getElementById('pub-name').innerText = currentPub.name;
+        document.getElementById('pub-avatar').src = currentPub.avatar;
+
+        // منطق علامة التوثيق (Verified Badge)
+        const verifiedWrapper = document.getElementById('verified-wrapper');
+        const verifiedTag = document.getElementById('verified-status-tag');
+        
+        if (currentPub.isVerified) {
+            if (verifiedWrapper) verifiedWrapper.innerHTML = `<img src="https://l.top4top.io/p_37419yq8q0.png" class="verified-icon">`;
+            if (verifiedTag) verifiedTag.innerHTML = `<p class="text-[9px] text-brand font-bold bg-brand/10 px-3 py-1.5 rounded-full tracking-widest uppercase shadow-sm">Verified Author</p>`;
+        }
+
+        updatePreview();
+        switchCodeTab('html', 0);
+    }
+
+    // تحديث المعاينة الحية داخل الـ Iframe
+    function updatePreview() {
+        const isDark = document.documentElement.classList.contains('dark');
+        const frame = document.getElementById('live-preview-frame');
+        if (!frame) return;
+
+        frame.srcdoc = `
+            <!DOCTYPE html>
+            <html class="${isDark ? 'dark' : ''}">
+            <head>
+                <script src="https://cdn.tailwindcss.com"><\/script>
+                <style>
+                    body { 
+                        margin: 0; 
+                        display: flex; 
+                        justify-content: center; 
+                        align-items: center; 
+                        min-height: 100vh; 
+                        background: transparent; 
+                        transition: all 0.3s; 
+                        color: ${isDark ? '#f8fafc' : '#0f172a'}; 
+                    }
+                    ${currentDesign.css}
+                </style>
+            </head>
+            <body>${currentDesign.html}</body>
+            </html>`;
+    }
+    
+function highlightCode(code, type) {
+    if (!code) return '';
+
+    // تحويل الرموز الأساسية (Escaping)
+    let output = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+  if (type === 'html') {
+    // 1. تقسيم الكود لعزل التاجات عن النصوص
+    const parts = output.split(/(&lt;!--[\s\S]*?--&gt;|&lt;[\s\S]*?&gt;)/g);
+
+    return parts.map(part => {
+        if (!part) return '';
+
+        // حالة التعليقات
+        if (part.startsWith('&lt;!--')) {
+            return `<span class="hl-comment">${part}</span>`;
+        }
+        
+        // حالة التاجات
+        if (part.startsWith('&lt;')) {
+            return part.replace(/(&lt;\/?)([a-z0-9]+)|(\s[a-zA-Z0-9-]+)(?==)|(=)(".*?"|'.*?')|(\/?[&gt;]+)/gi, (match, p1, p2, p3, p4, p5, p6) => {
+                if (p1) return `<span class="hl-tag">${p1}${p2}</span>`;
+                if (p3) return ` <span class="hl-attr">${p3.trim()}</span>`;
+                if (p4) return `<span class="hl-punct">${p4}</span><span class="hl-value">${p5}</span>`;
+                if (p6) return `<span class="hl-tag">${p6}</span>`;
+                return match;
+            });
+        }
+
+        // --- التعديل السحري هنا ---
+        // أي نص ليس تاجاً ولا تعليقاً، نغلفه بكلاس hl-text
+        return `<span class="hl-text">${part}</span>`; 
+    }).join('');
+}
+
+ else {
+        // --- CSS PROFESSIONAL HIGHLIGHTING ---
+        return output
+            // 1. تلوين التعليقات أولاً
+            .replace(/\/\*[\s\S]*?\*\//g, '<span class="hl-comment">$&</span>')
+            
+            // 2. تلوين المحددات (Selectors) - يشمل الـ Class, ID, Tags, والـ Hover
+            // نبحث عن أي شيء قبل القوس { بشرط ألا يكون داخل بلوك الخصائص
+            .replace(/^([^\{\}]+)(?=\s*\{)/gm, function(match) {
+                return match.replace(/([\.#][a-zA-Z0-9_-]+)|(:\w+)|(::\w+)|([a-zA-Z0-9_-]+)/g, function(selector) {
+                    if (selector.startsWith('.') || selector.startsWith('#')) return `<span class="hl-selector">${selector}</span>`;
+                    if (selector.startsWith(':')) return `<span class="hl-selector">${selector}</span>`;
+                    return `<span class="hl-tag">${selector}</span>`; // للتاجات مثل div, body
+                });
+            })
+
+            // 3. تلوين الخصائص (Properties) - التي تنتهي بـ :
+            .replace(/([a-zA-Z-]+)(?=\s*:)/g, '<span class="hl-property">$1</span>')
+
+            // 4. تلوين القيم (Values) - التي بين : و ;
+            .replace(/:\s*([^;\}]+)(?=[;\}])/g, '<span class="hl-punct">:</span> <span class="hl-value">$1</span>')
+
+            // 5. تلوين الرموز
+            .replace(/[\{\};]/g, '<span class="hl-punct">$&</span>');
+    }
+}
+
+function switchCodeTab(mode, index) {
+    const bg = document.getElementById('code-active-bg');
+    const output = document.getElementById('code-output');
+    if (!output || !currentDesign) return;
+
+    // 1. تحريك المؤشر البنفسجي
+    if (bg) {
+        bg.style.transform = `translateX(${index * 100}%)`;
+    }
+
+    // 2. جلب الكود وتلوينه
+    const rawCode = (mode === 'html') ? currentDesign.html : currentDesign.css;
+    
+    // إضافة تأثير "تلاشي" بسيط عند التبديل
+    output.style.opacity = '0';
+    
+    setTimeout(() => {
+        output.innerHTML = highlightCode(rawCode, mode);
+        output.style.opacity = '1';
+    }, 50);
+
+    // 3. تحديث مظهر الأزرار بشكل احترافي
+    const btns = {
+        html: document.getElementById('btn-html'),
+        css: document.getElementById('btn-css')
+    };
+
+    Object.keys(btns).forEach(key => {
+        if (btns[key]) {
+            if (key === mode) {
+                btns[key].classList.add('text-white');
+                btns[key].classList.remove('text-slate-400');
+            } else {
+                btns[key].classList.remove('text-white');
+                btns[key].classList.add('text-slate-400');
+            }
+        }
+    });
+}
+
+    // دالة نسخ الكود الكامل
+    function copyFullCode() {
+        const fullCode = `<style>\n${currentDesign.css}\n</style>\n${currentDesign.html}`;
+        navigator.clipboard.writeText(fullCode).then(() => {
+            const btn = document.getElementById('copy-btn');
+            if (!btn) return;
+            
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied Successfully! ✅';
+            btn.style.background = '#10b981';
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = '#6336fa';
+            }, 2000);
+        });
+    }
+
+    // تشغيل الدالة عند تحميل النافذة
+    window.onload = initPage;
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

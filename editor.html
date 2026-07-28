@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Wuaze Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="editor.css"> <!-- تأكد من اسم ملف الـ CSS -->
+</head>
+<body class="dark"> <!-- جعلنا الثيم الداكن هو الافتراضي للمظهر الاحترافي -->
+
+<!-- شريط التنقل العلوي الاحترافي -->
+<header class="editor-header">
+    <div class="header-left">
+        <div class="brand">
+            <i class="fas fa-code"></i>
+            <span>UI Wuaze</span>
+        </div>
+        <div class="file-info" title="Current File">
+            <i class="fas fa-file-code"></i>
+            <span id="display-name">Untitled.txt</span>
+        </div>
+    </div>
+
+    <div class="header-center">
+        <select id="lang-select" class="lang-dropdown">
+            <option value="none">Plain Text</option>
+            <option value="html" selected>HTML</option>
+            <option value="css">CSS</option>
+            <option value="js">JS</option>
+        </select>
+    </div>
+
+    <div class="header-right">
+        <span id="char-count" class="status-badge">0 Chars</span>
+        <button class="icon-btn" title="Open File" onclick="document.getElementById('fileInput').click()"><i class="fas fa-folder-open"></i></button>
+        <button class="icon-btn" title="Export/Save" onclick="openModal()"><i class="fas fa-download"></i></button>
+        <button class="icon-btn" title="Run Preview" onclick="togglePreview()"><i class="fas fa-play"></i></button>
+        <button class="icon-btn" title="Toggle Theme" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+        <button class="icon-btn danger-btn" title="Exit" onclick="exitEditor()"><i class="fas fa-power-off"></i></button>
+        <input type="file" id="fileInput" hidden onchange="handleUpload(event)">
+    </div>
+</header>
+
+<div class="main-container" id="editor-view">
+    <div id="line-numbers">1</div>
+    <div class="editor-holder">
+        <textarea id="editing" spellcheck="false" oninput="handleInput()" onscroll="handleScroll()"></textarea>
+        <pre id="highlighting"><code id="code-content"></code></pre>
+    </div>
+</div>
+
+<iframe id="preview-frame"></iframe>
+
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+    <h3><i class="fas fa-save"></i> Save Project</h3>
+    <div class="input-group">
+        <input type="text" id="filename" placeholder="File name...">
+        <select id="ext">
+            <option value="html">.html</option>
+            <option value="css">.css</option>
+            <option value="js">.js</option>
+        </select>
+    </div>
+    <button class="btn-primary" onclick="download()">Download Now</button>
+</div>
+
+<script src="editor.js"></script>
+</body>
+</html>

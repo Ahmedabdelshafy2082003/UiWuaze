@@ -1,0 +1,63 @@
+/* تنسيق سكشن التاريخ */
+.history-section-wrapper {
+    width: 100%;
+    margin: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.history-card-container {
+    padding: 0 20px;
+    width: 100%;
+    max-width: 500px; /* عرض البطاقة */
+}
+
+/* تعديل البطاقة لتناسب المحتوى الجديد */
+.history-card {
+    width: 100% !important;
+    flex: none !important;
+    height: 250px;
+    background-image: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1461360228754-6e81c478595a?q=80&w=1000'); /* صورة خلفية تعبيرية للتاريخ */
+    background-size: cover;
+    position: relative;
+    border: 2px solid #8c52ff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px;
+    transition: 0.3s;
+}
+
+/* اللوجو الصغير في الزاوية اليسرى */
+.card-mini-logo {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 35px;
+    height: 35px;
+    border-radius: 5px;
+    border: 1px solid rgba(255,255,255,0.3);
+    z-index: 5;
+}
+
+.history-card-content {
+    z-index: 2;
+}
+
+#history-event-text {
+    font-size: 18px !important;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 5px;
+}
+
+#history-year {
+    color: #8c52ff;
+    font-weight: 900;
+    font-size: 22px;
+}
+
+.history-card:hover {
+    box-shadow: 0 0 20px rgba(140, 82, 255, 0.4);
+}

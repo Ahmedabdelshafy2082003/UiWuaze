@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <link rel="icon" href="48x48.png" sizes="48x48" type="image/png">
+
+<link rel="icon" href="96x96.png" sizes="96x96" type="image/png"> 
+   <link rel="manifest" href="/manifest.json">
+ 
+<title>Custom Dropdown Designer Tool</title>
+
+<style>
+
+/* Reset and Base Styles */
+:root {
+    /* 1. Colors (الألوان) */
+    --clr-bg: #fcfcfd;
+    --clr-bg-dark: #0a0324;
+    --clr-text-main: #111111;
+    --clr-text-muted: #666666;
+    --clr-primary: #8c52ff;
+    --clr-primary-dark: #7a42eb;
+    --clr-primary-glow: rgba(140, 82, 255, 0.4);
+    --clr-secondary: #4b0082;
+    --clr-accent: #ff4757;
+    --clr-white: #ffffff;
+    
+    /* 2. Typography (الخطوط) */
+    --font-main: 'Inter', sans-serif;
+    --font-display: 'Chango', cursive;
+    --font-mono: 'Fira Code', monospace;
+    
+    /* 3. Layout (الأبعاد) */
+    --max-width-section: 78.125rem; /* 1250px */
+    
+    /* 4. Borders & Radii (الحواف) */
+    --radius-full: 6.25rem; /* 100px */
+    --radius-lg: 2.5rem; /* 40px */
+    --radius-md: 1.5rem; /* 24px */
+    
+    /* 5. Shadows (الظلال) */
+    --shadow-sm: 0 10px 20px rgba(0,0,0,0.02);
+    --shadow-md: 0 20px 40px rgba(0,0,0,0.05);
+    --shadow-primary: 0 20px 50px rgba(140, 82, 255, 0.25);
+    
+    /* 6. Animations (الحركة) */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body { width:100%; height:100%; font-family: 'Cairo', sans-serif; background:#ffffff; overflow-x:hidden; }
+
+/* ================== HEADER ================== */
+
+header { width:100%; background:rgba(255,255,255,0.95); backdrop-filter: blur(6px); position:fixed; top:0; left:0; z-index:20; border-bottom:1px solid #eee; }
+
+.navbar { max-width:1400px; margin:auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; }
+
+.nav-left { display:flex; align-items:center; gap:15px; }
+
+.logo { width:55px; height:55px; border-radius:8px; }
+
+.nav-right { display:flex; align-items:center; gap:25px; }
+
+.nav-right a { text-decoration:none; font-size:18px; color:#333; font-weight:700; }
+
+/* Wrapper and Box Styles */
+
+.wrapper {
+
+    max-width: 820px;
+
+    margin: auto;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+
+    padding: 0 20px;
+
+}
+
+.box {
+
+    background: #fff;
+
+    padding: 15px;
+
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+}
+
+.row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 10px; }
+
+.row label { flex-basis: 100px; font-weight: 600; color: #555; }
+
+.row input[type="text"], .row input[type="number"], .row select {
+
+    flex: 1;
+
+    padding: 8px;
+
+    border: 1px solid #ccc;
+
+    border-radius: 4px;
+
+    min-width: 150px;
+
+}
+
+.row input[type="color"] { width: 40px; height: 40px; border: none; padding: 0; }
+
+.row input[type="range"] { flex: 1; margin: 0; }
+
+.row .range-value { width: 40px; text-align: right; font-weight: bold; }
+
+/* Button Styles (Placeholder) */
+
+button {
+
+    padding: 8px 12px;
+
+    border: none;
+
+    border-radius: 6px;
+
+    cursor: pointer;
+
+    background: #222;
+
+    color: white;
+
+    transition: 0.2s;
+
+    font-size: 16px;
+
+}
+
+button:hover {
+
+    background: #444;
+
+}
+
+/* Dropdown Preview Styling */
+
+#dropdownPreview {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    height: 150px;
+
+    border: 1px dashed #ccc;
+
+    border-radius: 8px;
+
+    margin-top: 15px;
+
+}
+
+/* ------------------------------------- */
+
+/* Custom Dropdown Styles (Base for preview) */
+
+.custom-dropdown-container {
+
+    position: relative;
+
+    user-select: none;
+
+    cursor: pointer;
+
+}
+
+/* The element that is always visible (the selected item) */
+
+#dropdownHeader {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 0 15px; /* Base padding */
+
+    transition: all 0.2s ease;
+
+}
+
+#dropdownHeader .arrow {
+
+    transition: transform 0.3s;
+
+}
+
+/* The actual dropdown list */
+
+#dropdownList {
+
+    list-style: none;
+
+    position: absolute;
+
+    z-index: 10;
+
+    top: 100%; /* Position right below the header */
+
+    width: 100%;
+
+    margin-top: -1px; /* Overlap border */
+
+    padding: 0;
+
+    overflow: hidden;
+
+    display: none; /* Default state: hidden */
+
+    opacity: 0; /* Default state: hidden */
+
+    transition: opacity 0.3s ease;
+
+}
+
+#dropdownList li {
+
+    padding: 8px 15px;
+
+    border-top: 1px solid #eee;
+
+    background: #f8f8f8;
+
+    color: #333;
+
+    font-size: 16px;
+
+    transition: background 0.2s;
+
+}
+
+/* These classes are controlled by JS to reflect the tool settings instantly */
+
+.open .arrow {
+
+    transform: rotate(180deg) !important;
+
+}
+
+.open #dropdownList {
+
+    display: block !important;
+
+    opacity: 1 !important;
+
+}
+
+/* Code Preview Style */
+
+pre {
+
+    background: #eee;
+
+    padding: 15px;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    white-space: pre-wrap;
+
+    direction: ltr; /* Ensure CSS code is displayed LTR */
+
+}
+
+.preview-box {
+
+    text-align: center; padding: 30px; background: #f9f9f9; border: 2px dashed #e0e0e0;
+
+    min-height: 150px; display: flex; align-items: center; justify-content: center;} 
+
+/* Copy Alert */
+
+#copyAlert {
+
+    position: fixed;
+
+    bottom: 20px;
+
+    right: 20px;
+
+    background: #0a3ec2;
+
+    color: white;
+
+    padding: 10px 18px;
+
+    border-radius: 8px;
+
+    opacity: 0;
+
+    transition: 0.4s;
+
+    font-size: 15px;
+
+}
+
+/* ================== SHARE BUTTONS ================== */
+
+.share-buttons {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin: 20px auto;
+
+    max-width: 820px;
+
+    padding: 0 20px;
+
+}
+
+.share-btn {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    color: #fff;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+}
+
+.fb { background:#1877F2; }
+
+.x { background:#000000; }
+
+.in { background:#0A66C2; }
+
+.re { background:#FF4500; }
+
+.wa { background:#25D366; }
+
+.pi { background:#BD081C; }
+
+.em { background:#6E6E6E; }
+
+/* FOOTER */
+
+        footer {
+            background: #111;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 4rem 4rem 0 0;
+        }
+        .dev-tag { color: var(--clr-white); text-decoration: none; font-weight: 800; }
+
+/* ===== TOOLS MENU ===== */
+
+.tools-menu {
+
+    position: relative;
+
+    font-weight: 700;
+
+}
+
+.tools-btn {
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    color: #333;
+
+}
+
+.tools-dropdown {
+
+    list-style: none;
+
+    position: absolute;
+
+    top: 40px;
+
+    right: 0;
+
+    background: #fff;
+
+    border: 1px solid #ddd;
+
+    border-radius: 10px;
+
+    width: 260px;
+
+    display: none;
+
+    flex-direction: column;
+
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+
+    z-index: 999;
+
+    padding: 0;
+
+    margin: 0;
+
+}
+
+.tools-dropdown li a {
+
+    padding: 12px 16px;
+
+    text-decoration: none;
+
+    color: #333;
+
+    font-size: 15px;
+
+    border-bottom: 1px solid #eee;
+
+    transition: 0.2s;
+
+    display: block;
+
+}
+
+.tools-dropdown li:last-child a {
+
+    border-bottom: none;
+
+}
+
+.tools-dropdown li a:hover {
+
+    background: #f5f7ff;
+
+}
+
+.tools-dropdown li a.active {
+
+    background: #5D0BDE;
+
+    color: #fff;
+
+}
+
+.tools-menu:hover .tools-dropdown {
+
+    display: flex;
+
+}
+
+</style>
+
+<script type="text/javascript">
+
+    (function(c,l,a,r,i,t,y){
+
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+
+    })(window, document, "clarity", "script", "uh2yar93y0");
+
+</script>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="navbar">
+
+    <div class="nav-left">
+
+    <img
+
+      src="logo.png"
+
+      class="logo"
+
+      alt="UI Tools Logo"
+
+      onclick="location.href='https://ui.wuaze.com';"
+
+    >
+
+  </div>
+
+    <div class="nav-right">
+
+<div class="tools-menu">
+
+  <span class="tools-btn">Tools ▾</span>
+
+  <ul class="tools-dropdown">
+
+    <li><a href="/color" data-page="color">Gradient Color Generator</a></li>
+
+    <li><a href="/button" data-page="button">Button Designer</a></li>
+
+    <li><a href="/input" data-page="input">Input Field Designer</a></li>
+
+    <li><a href="/select" data-page="select" class="active">Select Menu Designer</a></li>
+
+    <li><a href="/header" data-page="header">Header Builder</a></li>
+
+    <li><a href="/link" data-page="link">Link Customizer</a></li>
+
+    <li><a href="/card" data-page="card">Card Designer</a></li>
+
+    <li><a href="/footer" data-page="footer">Footer Generator</a></li>
+
+    <li><a href="/text" data-page="text">Text Formatter</a></li>
+
+    <li><a href="/image" data-page="image">Image Styling Tools</a></li>
+
+    <li><a href="/video" data-page="video">Video Styling Tools</a></li>
+
+  </ul>
+
+</div>
+
+<a href="https://ui.wuaze.com/info">About</a>
+
+<a
+
+  href="https://wa.me/201112313164?text=Hello%20Mr.%20Ahmed%2C%20may%20I%20speak%20with%20you%3F"
+
+  target="_blank"
+
+>
+
+  Contact
+
+</a>
+
+  </div>
+
+</div>
+
+</header>
+
+<br /><br /><br /><br /><br /><br /><br />
+
+<div class="wrapper">
+
+    <div class="box">
+
+        <h3>🎨 Custom Dropdown Designer (UL/LI)</h3>
+
+        <div id="dropdownPreview">
+
+            <div class="custom-dropdown-container" id="customDropdown">
+
+                <div id="dropdownHeader">
+
+                    <span id="selectedOptionText">Select Option</span>
+
+                    <span class="arrow" id="arrowIcon">▼</span>
+
+                </div>
+
+                <ul id="dropdownList">
+
+                    <li>Option One</li>
+
+                    <li>Option Two</li>
+
+                    <li>Option Three</li>
+
+                    <li>Another Choice</li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="box">
+
+        <h3>⚙️ Dropdown Settings</h3>
+
+        <div class="row">
+
+            <label for="selectWidth">Width (px):</label>
+
+            <input type="range" id="selectWidth" min="150" max="400" value="250" oninput="updateDropdown()">
+
+            <span class="range-value" id="widthValue">250px</span>
+
+        </div>
+
+        <div class="row">
+
+            <label for="selectHeight">Header Height (px):</label>
+
+            <input type="range" id="selectHeight" min="30" max="60" value="40" oninput="updateDropdown()">
+
+            <span class="range-value" id="heightValue">40px</span>
+
+        </div>
+
+        <div class="row">
+
+            <label for="bgColor">Header/List BG:</label>
+
+            <input type="color" id="bgColor" value="#f8f8f8" oninput="updateDropdown()">
+
+        </div>
+
+        <div class="row">
+
+            <label for="textColor">Text Color:</label>
+
+            <input type="color" id="textColor" value="#333333" oninput="updateDropdown()">
+
+        </div>
+
+        <div class="row">
+
+            <label for="fontSize">Font Size (px):</label>
+
+            <input type="range" id="fontSize" min="14" max="24" value="16" oninput="updateDropdown()">
+
+            <span class="range-value" id="fontSizeValue">16px</span>
+
+        </div>
+
+        <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+
+        <div class="row">
+
+            <label for="borderRadius">Border Radius (px):</label>
+
+            <input type="range" id="borderRadius" min="0" max="25" value="4" oninput="updateDropdown()">
+
+            <span class="range-value" id="radiusValue">4px</span>
+
+        </div>
+
+        <div class="row">
+
+            <label for="borderWidth">Border (px):</label>
+
+            <input type="range" id="borderWidth" min="0" max="3" value="1" oninput="updateDropdown()">
+
+            <span class="range-value" id="borderValue">1px</span>
+
+        </div>
+
+        <div class="row">
+
+            <label for="borderColor">Border Color:</label>
+
+            <input type="color" id="borderColor" value="#cccccc" oninput="updateDropdown()">
+
+        </div>
+
+        <div class="row">
+
+            <label for="arrowColor">Arrow Color:</label>
+
+            <input type="color" id="arrowColor" value="#555555" oninput="updateDropdown()">
+
+        </div>
+
+        <div class="row">
+
+            <label for="hoverBgColor">List Hover BG:</label>
+
+            <input type="color" id="hoverBgColor" value="#e0e0e0" oninput="updateDropdown()">
+
+        </div>
+
+    </div>
+
+    
+
+    <div class="box">
+
+        <h3>💻 HTML Code</h3>
+
+        <pre id="htmlBox"></pre>
+
+        <div class="row" style="justify-content: center; margin-top: 20px;">
+
+            <button onclick="copyHTML()">Copy HTML</button>
+
+        </div>
+
+    </div>
+
+    
+
+    <div class="box">
+
+        <h3>💅 CSS Code</h3>
+
+        <pre id="cssBox"></pre>
+
+        <div class="row" style="justify-content: center; margin-top: 20px;">
+
+            <button onclick="copyCSS()">Copy CSS</button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div id="copyAlert">Copied Successfully!</div>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<div class="share-buttons">
+
+    <a class="share-btn fb" target="_blank" id="fb-share"><i class="fa-brands fa-facebook-f"></i> Share</a>
+
+ <a class="share-btn x" target="_blank" id="x-share">
+
+   <i class="fa-brands fa-x-twitter"></i> Share
+
+</a>
+
+    <a class="share-btn in" target="_blank" id="in-share"><i class="fa-brands fa-linkedin-in"></i> Share</a>
+
+    <a class="share-btn re" target="_blank" id="re-share"><i class="fa-brands fa-reddit-alien"></i> Share</a>
+
+    <a class="share-btn wa" target="_blank" id="wa-share"><i class="fa-brands fa-whatsapp"></i> Share</a>
+
+    <a class="share-btn pi" target="_blank" id="pi-share"><i class="fa-brands fa-pinterest"></i> Save</a>
+
+    <a class="share-btn em" target="_blank" id="em-share"><i class="fa-solid fa-envelope"></i> Email</a>
+
+</div>
+
+<div style="max-width:820px; margin:20px auto; display:flex; flex-direction:column; gap:20px;">
+
+<div style="background:#fff; border:1px solid #ddd; padding:20px; border-radius:10px;">
+
+    <h2 style="display:flex; align-items:center; gap:10px; margin:0 0 10px;">
+
+        <span style="font-size:26px;
+
+                     background: linear-gradient(45deg, #8e2de2, #4a00e0);
+
+                     -webkit-background-clip: text;
+
+                     -webkit-text-fill-color: transparent;">
+
+            ⬇️
+
+        </span>
+
+        Preview & Export
+
+    </h2>
+
+    <p style="margin:0; color:#333; line-height:1.7;">
+
+        You can preview the custom dropdown design and modify the settings directly, then copy the ready-to-use CSS code for any project.
+
+        Changes are displayed instantly without delay.
+
+    </p>
+
+</div>
+
+<div style="background:#fff; border:1px solid #ddd; padding:20px; border-radius:10px;">
+
+    <h2 style="display:flex; align-items:center; gap:10px; margin:0 0 10px;">
+
+        <span style="font-size:26px;
+
+                     background: linear-gradient(45deg, #8e2de2, #4a00e0);
+
+                     -webkit-background-clip: text;
+
+                     -webkit-text-fill-color: transparent;">
+
+            ⚙️
+
+        </span>
+
+        Processing
+
+    </h2>
+
+    <p style="margin:0; color:#333; line-height:1.7;">
+
+        All operations run on your browser (Client-side). Nothing is uploaded anywhere — complete privacy is guaranteed.
+
+    </p>
+
+</div>
+
+<div style="background:#fff; border:1px solid #ddd; padding:20px; border-radius:10px;">
+
+    <h2 style="display:flex; align-items:center; gap:10px; margin:0 0 10px;">
+
+        <span style="font-size:26px;
+
+                     background: linear-gradient(45deg, #8e2de2, #4a00e0);
+
+                     -webkit-background-clip: text;
+
+                     -webkit-text-fill-color: transparent;">
+
+            ✔️
+
+        </span>
+
+        No Limits
+
+    </h2>
+
+    <p style="margin:0; color:#333; line-height:1.7;">
+
+        There are absolutely no restrictions. You can design, preview, and copy as many dropdowns as you like.
+
+    </p>
+
+</div>
+
+</div>
+
+<footer>
+    <div style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">UI WUAZE</div>
+    <p>&copy; 2026 Design Lab | Developed by <a href="https://ui.wuaze.com/ahmedabdelshafy" class="dev-tag">@Ahmed Abdelshafy</a></p>
+</footer>
+
+<script>
+
+// --- Custom Dropdown Designer Logic ---
+
+const customDropdown = document.getElementById('customDropdown');
+
+const dropdownHeader = document.getElementById('dropdownHeader');
+
+const dropdownList = document.getElementById('dropdownList');
+
+const selectedOptionText = document.getElementById('selectedOptionText');
+
+const cssBox = document.getElementById('cssBox');
+
+const htmlBox = document.getElementById('htmlBox'); // New HTML Box
+
+const copyAlert = document.getElementById('copyAlert');
+
+const styleTag = document.createElement('style'); 
+
+document.head.appendChild(styleTag); 
+
+const getProp = (id) => document.getElementById(id);
+
+// Toggle dropdown visibility for preview
+
+customDropdown.addEventListener('click', () => {
+
+    customDropdown.classList.toggle('open');
+
+});
+
+// Select item functionality for preview
+
+dropdownList.querySelectorAll('li').forEach(item => {
+
+    item.addEventListener('click', (event) => {
+
+        event.stopPropagation(); 
+
+        selectedOptionText.textContent = item.textContent;
+
+        customDropdown.classList.remove('open');
+
+    });
+
+});
+
+// ===================================
+
+// HTML Generation Function
+
+// ===================================
+
+function generateHTML() {
+
+    const defaultText = selectedOptionText.textContent;
+
+    let listItems = '';
+
+    
+
+    // Dynamically generate the list items based on the preview content
+
+    dropdownList.querySelectorAll('li').forEach(item => {
+
+        listItems += `        <li>${item.textContent}</li>\n`;
+
+    });
+
+    return `<div class="custom-dropdown-container">
+
+    <div id="dropdownHeader">
+
+        <span id="selectedOptionText">${defaultText}</span>
+
+        <span class="arrow">▼</span>
+
+    </div>
+
+    <ul id="dropdownList">
+
+${listItems}    </ul>
+
+</div>
+
+`;
+
+}
+
+// ===================================
+
+// CSS Generation Function
+
+// ===================================
+
+function generateCSS() {
+
+    const width = getProp('selectWidth').value + 'px';
+
+    const height = getProp('selectHeight').value + 'px';
+
+    const bgColor = getProp('bgColor').value;
+
+    const textColor = getProp('textColor').value;
+
+    const fontSize = getProp('fontSize').value + 'px';
+
+    const borderRadius = getProp('borderRadius').value + 'px';
+
+    const borderWidth = getProp('borderWidth').value + 'px';
+
+    const borderColor = getProp('borderColor').value;
+
+    const arrowColor = getProp('arrowColor').value;
+
+    const hoverBgColor = getProp('hoverBgColor').value;
+
+    const headerBorderRadius = `border-radius: ${borderRadius} ${borderRadius} 0 0;`;
+
+    const listBorderRadius = `border-radius: 0 0 ${borderRadius} ${borderRadius};`;
+
+    let containerCSS = `.custom-dropdown-container {\n`;
+
+    containerCSS += `    position: relative;\n`;
+
+    containerCSS += `    user-select: none;\n`;
+
+    containerCSS += `    cursor: pointer;\n`;
+
+    containerCSS += `    width: ${width};\n`;
+
+    containerCSS += `}\n\n`;
+
+    let headerCSS = `.custom-dropdown-container #dropdownHeader {\n`;
+
+    headerCSS += `    /* Header Base Style */\n`;
+
+    headerCSS += `    height: ${height};\n`;
+
+    headerCSS += `    line-height: ${height};\n`;
+
+    headerCSS += `    padding: 0 15px;\n`;
+
+    headerCSS += `    background-color: ${bgColor};\n`;
+
+    headerCSS += `    color: ${textColor};\n`;
+
+    headerCSS += `    font-size: ${fontSize};\n`;
+
+    headerCSS += `    border: ${borderWidth} solid ${borderColor};\n`;
+
+    headerCSS += `    border-radius: ${borderRadius};\n`;
+
+    headerCSS += `    display: flex;\n`;
+
+    headerCSS += `    justify-content: space-between;\n`;
+
+    headerCSS += `    align-items: center;\n`;
+
+    headerCSS += `    transition: all 0.2s ease;\n`;
+
+    headerCSS += `}\n\n`;
+
+    let listBaseCSS = `.custom-dropdown-container #dropdownList {\n`;
+
+    listBaseCSS += `    /* List Base Style */\n`;
+
+    listBaseCSS += `    list-style: none;\n`;
+
+    listBaseCSS += `    position: absolute;\n`;
+
+    listBaseCSS += `    z-index: 10;\n`;
+
+    listBaseCSS += `    top: 100%;\n`;
+
+    listBaseCSS += `    width: 100%;\n`;
+
+    listBaseCSS += `    margin-top: -${borderWidth}; /* Overlap header border */\n`;
+
+    listBaseCSS += `    padding: 0;\n`;
+
+    listBaseCSS += `    overflow: hidden;\n`;
+
+    listBaseCSS += `    border: ${borderWidth} solid ${borderColor};\n`;
+
+    listBaseCSS += `    border-top: none;\n`;
+
+    listBaseCSS += `    ${listBorderRadius}\n`;
+
+    listBaseCSS += `}\n\n`;
+
+    let listItemCSS = `.custom-dropdown-container #dropdownList li {\n`;
+
+    listItemCSS += `    /* List Item Style */\n`;
+
+    listItemCSS += `    padding: 8px 15px;\n`;
+
+    listItemCSS += `    background: ${bgColor};\n`;
+
+    listItemCSS += `    color: ${textColor};\n`;
+
+    listItemCSS += `    font-size: ${fontSize};\n`;
+
+    listItemCSS += `    border-top: 1px solid #eee;\n`;
+
+    listItemCSS += `    transition: background 0.2s;\n`;
+
+    listItemCSS += `}\n\n`;
+
+    let arrowCSS = `.custom-dropdown-container #dropdownHeader .arrow {\n`;
+
+    arrowCSS += `    /* Arrow Style */\n`;
+
+    arrowCSS += `    color: ${arrowColor};\n`;
+
+    arrowCSS += `    font-size: 14px;\n`;
+
+    arrowCSS += `    transition: transform 0.3s;\n`;
+
+    arrowCSS += `}\n\n`;
+
+    let listHoverCSS = `.custom-dropdown-container #dropdownList li:hover {\n`;
+
+    listHoverCSS += `    background: ${hoverBgColor};\n`;
+
+    listHoverCSS += `}\n\n`;
+
+    let openStateCSS = `/* State when the dropdown is open */\n`;
+
+    openStateCSS += `.custom-dropdown-container.open #dropdownHeader {\n`;
+
+    openStateCSS += `    ${headerBorderRadius}\n`;
+
+    openStateCSS += `    border-bottom-color: ${bgColor};\n`;
+
+    openStateCSS += `}\n\n`;
+
+    // JS-controlled classes (included for user's final CSS)
+
+    let jsControlledClasses = `/* Classes below are managed by JavaScript (toggling the 'open' class on .custom-dropdown-container) */\n`;
+
+    jsControlledClasses += `.custom-dropdown-container #dropdownList { display: none; opacity: 0; }\n`;
+
+    jsControlledClasses += `.custom-dropdown-container.open #dropdownList { display: block; opacity: 1; }\n`;
+
+    jsControlledClasses += `.custom-dropdown-container.open #dropdownHeader .arrow { transform: rotate(180deg); }\n`;
+
+    const combinedCSS = containerCSS + headerCSS + listBaseCSS + listItemCSS + arrowCSS + listHoverCSS + openStateCSS + jsControlledClasses;
+
+    return { combined: combinedCSS };
+
+}
+
+function updateDropdown() {
+
+    // 1. Update Range Value Displays
+
+    getProp('widthValue').textContent = getProp('selectWidth').value + 'px';
+
+    getProp('heightValue').textContent = getProp('selectHeight').value + 'px';
+
+    getProp('fontSizeValue').textContent = getProp('fontSize').value + 'px';
+
+    getProp('radiusValue').textContent = getProp('borderRadius').value + 'px';
+
+    getProp('borderValue').textContent = getProp('borderWidth').value + 'px';
+
+    
+
+    // 2. Apply CSS for instant preview 
+
+    const width = getProp('selectWidth').value + 'px';
+
+    const height = getProp('selectHeight').value + 'px';
+
+    const bgColor = getProp('bgColor').value;
+
+    const textColor = getProp('textColor').value;
+
+    const fontSize = getProp('fontSize').value + 'px';
+
+    const borderRadius = getProp('borderRadius').value + 'px';
+
+    const borderWidth = getProp('borderWidth').value + 'px';
+
+    const borderColor = getProp('borderColor').value;
+
+    const arrowColor = getProp('arrowColor').value;
+
+    const hoverBgColor = getProp('hoverBgColor').value;
+
+    // Apply styles to container
+
+    customDropdown.style.width = width;
+
+    
+
+    // Apply styles to header
+
+    dropdownHeader.style.cssText = `
+
+        height: ${height};
+
+        line-height: ${height};
+
+        background-color: ${bgColor};
+
+        color: ${textColor};
+
+        font-size: ${fontSize};
+
+        border-radius: ${borderRadius};
+
+        border: ${borderWidth} solid ${borderColor};
+
+        cursor: pointer;
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+    `;
+
+    
+
+    // Apply styles to arrow
+
+    document.getElementById('arrowIcon').style.color = arrowColor;
+
+    // Apply styles to list
+
+    dropdownList.style.cssText = `
+
+        border: ${borderWidth} solid ${borderColor};
+
+        border-top: none;
+
+        border-radius: 0 0 ${borderRadius} ${borderRadius};
+
+    `;
+
+    
+
+    // Apply styles to list items
+
+    dropdownList.querySelectorAll('li').forEach(li => {
+
+        li.style.cssText = `
+
+            padding: 8px 15px;
+
+            background: ${bgColor};
+
+            color: ${textColor};
+
+            font-size: ${fontSize};
+
+            border-top: 1px solid #eee;
+
+        `;
+
+    });
+
+    // Inject hover and open state styles into the <style> tag
+
+    const previewStyles = `
+
+        #dropdownList li:hover {
+
+            background: ${hoverBgColor} !important;
+
+        }
+
+        .custom-dropdown-container.open #dropdownHeader {
+
+            border-radius: ${borderRadius} ${borderRadius} 0 0 !important;
+
+            border-bottom-color: ${bgColor} !important;
+
+        }
+
+    `;
+
+    styleTag.textContent = previewStyles;
+
+    // 3. Update CSS Box Preview
+
+    const cssObject = generateCSS();
+
+    cssBox.textContent = cssObject.combined;
+
+    
+
+    // 4. Update HTML Box Preview (New Step)
+
+    htmlBox.textContent = generateHTML();
+
+}
+
+function copyCSS() {
+
+    navigator.clipboard.writeText(cssBox.textContent);
+
+    copyAlert.textContent = "CSS Copied Successfully!";
+
+    copyAlert.style.opacity = "1";
+
+    setTimeout(() => copyAlert.style.opacity = "0", 1500);
+
+}
+
+// New function to copy HTML
+
+function copyHTML() {
+
+    navigator.clipboard.writeText(htmlBox.textContent);
+
+    copyAlert.textContent = "HTML Copied Successfully!";
+
+    copyAlert.style.opacity = "1";
+
+    setTimeout(() => copyAlert.style.opacity = "0", 1500);
+
+}
+
+// Initialize dropdown on load
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Force "Select Menu Designer" to be active in the Tools menu
+
+    document.querySelectorAll(".tools-dropdown a").forEach(link => {
+
+        if (link.getAttribute("data-page") === "select") {
+
+            link.classList.add("active");
+
+        } else {
+
+            link.classList.remove("active");
+
+        }
+
+    });
+
+    // Initialize the preview and code boxes
+
+    updateDropdown();
+
+});
+
+// --- General Functions ---
+
+const pageUrl = encodeURIComponent(window.location.href);
+
+const pageTitle = encodeURIComponent(document.title);
+
+// Share Buttons functionality
+
+document.getElementById("fb-share").href = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+
+document.getElementById("tw-share").href = `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`;
+
+document.getElementById("in-share").href = `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`;
+
+document.getElementById("re-share").href = `https://www.reddit.com/submit?url=${pageUrl}&title=${pageTitle}`;
+
+document.getElementById("wa-share").href = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+
+document.getElementById("pi-share").href = `https://pinterest.com/pin/create/button/?url=${pageUrl}&description=${pageTitle}`;
+
+document.getElementById("em-share").href = `mailto:?subject=${pageTitle}&body=${pageUrl}`;
+
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>
+

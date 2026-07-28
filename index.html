@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>UI Wuaze | High-Fidelity Design System</title>
+    <meta name="description" content="The definitive library for high-fidelity glassmorphic components. Zero-limit design tools, total privacy, and elite-grade UI magic.">
+    <meta name="keywords" content="UI Wuaze, Glassmorphism, UI Library, Frontend Components, CSS Framework, Next-Gen Design">
+    <link rel="canonical" href="https://uiwuaze.com"> <meta name="theme-color" content="#0a0a0a"> <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://uiwuaze.com">
+    <meta property="og:title" content="UI Wuaze | Kinetic Design Systems">
+    <meta property="og:description" content="Unlock elite-grade UI components with instant visual magic. Minimalist. Secure. Infinite.">
+    <meta property="og:image" content="https://l.top4top.io/p_3646yw00v0.jpg">
+    <meta property="og:image:alt" content="UI Wuaze Glassmorphic Interface Preview">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UI Wuaze | Master the Science of Simple Design">
+    <meta name="twitter:image" content="https://l.top4top.io/p_3646yw00v0.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chango&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="all">
+    
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  <link rel="stylesheet" href="index.css" type="text/css" media="all" />
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ahmed Abdelshafy",
+  "nationality": "Egypt",
+  "jobTitle": "Frontend Web Developer",
+  "url": "https://ui.wuaze.com/",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Independent Developer"
+  },
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Frontend Web Developer"
+  },
+  "subjectOf": [
+    {
+      "@type": "WebSite",
+      "name": "UI Wuaze",
+      "url": "https://ui.wuaze.com/",
+      "description": "Modern UI Components Library."
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Edres Law",
+      "description": "Former educational platform for teaching law students in Kuwait. Developed by Ahmed Abdelshafy."
+    }
+  ],
+  "sameAs": [
+    "https://www.youtube.com/@Ahmed_Abdelshafy"
+  ]
+}
+</script>
+</head>
+<body>
+
+<div id="install-banner" class="install-banner">
+    <div class="banner-content">
+        <img src="icon-192x192.png" alt="App Icon" class="app-icon">
+        <div class="banner-text">
+            <strong>UiWuaze App</strong>
+            <span>Install our app for a better and faster experience.</span>
+        </div>
+    </div>
+    <div class="banner-actions">
+        <button id="btn-install" class="btn-primary">Install</button>
+        <button id="btn-close" class="btn-close">&times;</button>
+    </div>
+</div>
+
+    <header class="main-header">
+    <nav class="navbar" aria-label="Main Navigation">
+        <div class="nav-container">
+            <a href="index.html" class="logo-wrapper" aria-label="UI Wuaze Home">
+                <img src="logo05.webp" alt="Ui Wuaze Logo" class="logo-img"> 
+            </a>
+            
+            <div class="nav-links" id="mainNav" aria-hidden="true" role="menu">
+                <a href="#tools" class="nav-link" role="menuitem">Tools</a>
+                <a href="#Library" class="nav-link" role="menuitem">Library</a>
+                <a href="https://wa.me/201112313164" class="nav-cta-btn" role="menuitem">
+                    <i class="fab fa-whatsapp" aria-hidden="true"></i> Contact
+                </a>
+            </div>
+
+            <button class="mobile-toggle" id="mobileMenuBtn" 
+                    aria-label="Open main menu" 
+                    aria-expanded="false" 
+                    aria-controls="mainNav">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+</header>
+
+
+<section class="hero" aria-labelledby="hero-title">
+    <div class="hero-content">
+        <h1 id="hero-title">Design Lab</h1>
+        <p class="hero-desc">Master the science of high-end CSS design.</p>
+    </div>
+</section>
+
+<div class="search-container" id="tools">
+    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+    <input type="text" id="toolSearch" class="search-box" placeholder="Search 20+ visual tools..." aria-label="Search visual tools" onkeyup="filterTools()">
+    <div id="noResults" class="no-results" role="alert" aria-live="polite">No tools found. Try another keyword!</div>
+</div>
+<main>
+<div class="tools-wrapper">
+    <div class="tools-toolbar" id="toolsGrid" role="list">
+        
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1" aria-label="Box Shadows - Locked">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-clone main-icon" aria-hidden="true"></i>
+            <span>Box Shadows</span>
+            <p>Ready-to-use depth for UI elements. Ease: 9/10</p>
+        </div>
+
+        <a href="/color" class="tool-card hot" role="listitem">
+            <i class="fas fa-palette main-icon" aria-hidden="true"></i>
+            <span>Gradients</span>
+            <p>Smooth, professional color transitions. Ease: 10/10</p>
+        </a>
+
+        <a href="/button" class="tool-card hot" role="listitem">
+            <i class="fas fa-mouse-pointer main-icon" aria-hidden="true"></i>
+            <span>Buttons</span>
+            <p>Custom styles for interactive buttons. Ease: 10/10</p>
+        </a>
+
+        <a href="/input" class="tool-card" role="listitem">
+            <i class="fas fa-keyboard main-icon" aria-hidden="true"></i>
+            <span>Inputs</span>
+            <p>Style text boxes and entry forms. Ease: 9/10</p>
+        </a>
+
+        <a href="/select" class="tool-card" role="listitem">
+            <i class="fas fa-list-ul main-icon" aria-hidden="true"></i>
+            <span>Dropdowns</span>
+            <p>Customizable selection lists. Ease: 8/10</p>
+        </a>
+
+        <a href="/header" class="tool-card" role="listitem">
+            <i class="fas fa-window-maximize main-icon" aria-hidden="true"></i>
+            <span>Header Builder</span>
+            <p>Design navigation bars and top site layouts. Ease: 7/10</p>
+        </a>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1" aria-label="Navigation - Locked">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-bars main-icon" aria-hidden="true"></i>
+            <span>Navigation</span>
+            <p>Design navbars and top layouts. Ease: 7/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1" aria-label="Glassmorphism - Locked">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-border-all main-icon" aria-hidden="true"></i>
+            <span>Glassmorphism</span>
+            <p>Translucent frosted glass effects. Ease: 8/10</p>
+        </div>
+
+        <a href="/link" class="tool-card" role="listitem">
+            <i class="fas fa-link main-icon" aria-hidden="true"></i>
+            <span>Links</span>
+            <p>Style hyperlinks and hover effects. Ease: 9/10</p>
+        </a>
+
+        <a href="/card" class="tool-card" role="listitem">
+            <i class="fas fa-id-card main-icon" aria-hidden="true"></i>
+            <span>UI Cards</span>
+            <p>Modern containers and profile cards. Ease: 9/10</p>
+        </a>
+
+        <a href="/footer" class="tool-card" role="listitem">
+            <i class="fa-solid fa-window-minimize main-icon" aria-hidden="true"></i>
+            <span>Footers</span>
+            <p>Professional site footer layouts. Ease: 8/10</p>
+        </a>
+
+        <a href="/text" class="tool-card" role="listitem">
+            <i class="fas fa-font main-icon" aria-hidden="true"></i>
+            <span>Typography</span>
+            <p>Adjust fonts and text styles. Ease: 10/10</p>
+        </a>
+
+        <a href="/image" class="tool-card" role="listitem">
+            <i class="fas fa-image main-icon" aria-hidden="true"></i>
+            <span>Image FX</span>
+            <p>Borders, shadows, and filters. Ease: 9/10</p>
+        </a>
+
+        <a href="/video" class="tool-card" role="listitem">
+            <i class="fas fa-video main-icon" aria-hidden="true"></i>
+            <span>Video UI</span>
+            <p>Format and frame video players. Ease: 8/10</p>
+        </a>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-spinner main-icon" aria-hidden="true"></i>
+            <span>Loaders</span>
+            <p>Smooth CSS loading animations. Ease: 8/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-check-square main-icon" aria-hidden="true"></i>
+            <span>Checkboxes</span>
+            <p>Custom toggleable checkmarks. Ease: 10/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-toggle-on main-icon" aria-hidden="true"></i>
+            <span>Toggles</span>
+            <p>Elegant switch buttons. Ease: 9/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-square-full main-icon" aria-hidden="true"></i>
+            <span>Borders</span>
+            <p>Unique frames and animated strokes. Ease: 9/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-braille main-icon" aria-hidden="true"></i>
+            <span>Mesh</span>
+            <p>Artistic multi-color backgrounds. Ease: 6/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-running main-icon" aria-hidden="true"></i>
+            <span>Animations</span>
+            <p>Movement for interactive elements. Ease: 7/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-table main-icon" aria-hidden="true"></i>
+            <span>Pricing</span>
+            <p>Clean subscription tables. Ease: 8/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-window-restore main-icon" aria-hidden="true"></i>
+            <span>Modals</span>
+            <p>Focused pop-up windows. Ease: 7/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-comment-alt main-icon" aria-hidden="true"></i>
+            <span>Tooltips</span>
+            <p>Helpful hints on hover. Ease: 9/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-shapes main-icon" aria-hidden="true"></i>
+            <span>Blobs</span>
+            <p>Fluid SVG-based shapes. Ease: 10/10</p>
+        </div>
+
+        <div class="tool-card locked" aria-disabled="true" tabindex="-1">
+            <div class="lock-badge"><i class="fas fa-lock" aria-hidden="true"></i></div>
+            <i class="fas fa-th main-icon" aria-hidden="true"></i>
+            <span>Patterns</span>
+            <p>Repeating CSS textures. Ease: 9/10</p>
+        </div>
+    </div>
+</div>
+
+<section class="section-container" id="Library">
+    <div class="premium-showcase">
+        <div class="premium-content">
+            <div class="badge-premium">
+                <i class="fas fa-crown" aria-hidden="true"></i> Pro Edition Available
+            </div>
+            <h2>UW Library</h2>
+            <ul class="premium-list">
+                <li>
+                    <i class="fas fa-layer-group" aria-hidden="true"></i>
+                    <span>Explore a massive collection of <b>250+ CSS components</b>.</span>
+                </li>
+                <li>
+                    <i class="fas fa-paint-brush" aria-hidden="true"></i>
+                    <span>From modern minimalism to bold futuristic trends.</span>
+                </li>
+                <li>
+                    <i class="fas fa-code" aria-hidden="true"></i>
+                    <span>Essential design styles and high-end UI patterns.</span>
+                </li>
+                <li>
+                    <i class="fas fa-bolt" aria-hidden="true"></i>
+                    <span>Elevate your web projects instantly.</span>
+                </li>
+            </ul>
+            <a href="https://ui.wuaze.com/library" class="btn-glow btn-glow-purple" aria-label="Enter UW Library">
+                Enter Library <i class="fas fa-chevron-right" aria-hidden="true"></i>
+            </a>
+        </div>
+        
+        <div class="premium-visual" aria-hidden="true">
+            <div class="browser-mockup">
+                <div class="browser-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <img src="img/library.gif" alt="UW Library Preview Image" class="browser-image">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section-container">
+    <div class="webuilder-showcase" style="cursor: default; opacity: 0.8;">
+        <div class="premium-content">
+            <div class="badge-webuilder">
+                <i class="fas fa-clock" aria-hidden="true"></i> Coming Soon
+            </div>
+            <h2>WeBuilder Engine</h2>
+            <ul class="premium-list">
+                <li>
+                    <i class="fas fa-mouse-pointer" aria-hidden="true" style="color: #00f2fe;"></i>
+                    <span>Experience the ultimate <b>Drag & Drop</b> interface.</span>
+                </li>
+                <li>
+                    <i class="fas fa-cubes" aria-hidden="true" style="color: #00f2fe;"></i>
+                    <span>Build full web pages visually without touching a line of code.</span>
+                </li>
+            </ul>
+            <a href="javascript:void(0);" class="btn-glow btn-glow-cyan" style="pointer-events: none; filter: grayscale(1); opacity: 0.7;">
+                Soon <i class="fas fa-lock" aria-hidden="true" style="margin-left: 10px;"></i>
+            </a>
+        </div>
+        
+        <div class="premium-visual" aria-hidden="true">
+            <div class="browser-mockup" style="filter: grayscale(0.5);">
+                <div class="browser-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <img src="img/WeBuilder.png" alt="WeBuilder UI Preview" class="browser-image" style="filter: hue-rotate(180deg);">
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section-container">
+    <div class="editor-promo">
+        <div class="editor-text">
+            <h2 class="editor-title">CSS Live Engine</h2>
+            <p class="editor-desc">Don't just copy. Experiment. Our live engine injects your code directly into a virtual browser environment for instant testing.</p>
+            <button class="cta-btn-white" onclick="location.href='https://ui.wuaze.com/editor';" aria-label="Launch Live CSS Editor">Launch Editor</button>
+        </div>
+        <div class="code-window" aria-hidden="true">
+            <span class="code-class">.ui-wuaze</span> {<br>
+            &nbsp;&nbsp;<span class="code-key">render</span>: <span class="code-val">instant</span>;<br>
+            &nbsp;&nbsp;<span class="code-key">quality</span>: <span class="code-num">100%</span>;<br>
+            &nbsp;&nbsp;<span class="code-key">ux</span>: <span class="code-val">smooth</span>;<br>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="section-container">
+    <div class="features-grid">
+        <div class="feature-card">
+            <i class="fas fa-bolt" aria-hidden="true"></i>
+            <h3>Instant Preview</h3>
+            <p>See your changes in real-time as you tweak colors, shadows, and borders.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-code" aria-hidden="true"></i>
+            <h3>Clean Code</h3>
+            <p>Optimized, lightweight CSS and HTML ready to be dropped into any project.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-shield-halved" aria-hidden="true"></i>
+            <h3>Privacy First</h3>
+            <p>No account required. Your designs stay in your browser until you copy them.</p>
+        </div>
+    </div>
+</section>
+</main>
+<section class="section-container">
+    <div class="phrase-section">
+        <p class="phrase-label">Daily Inspiration</p>
+        <div id="randomPhraseText" class="random-phrase-text" aria-live="polite">"Simplicity is the ultimate sophistication."</div>
+        <button onclick="newPhrase()" class="refresh-btn" aria-label="Get a new design quote">Refresh Quote</button>
+    </div>
+</section>
+<footer>
+    <div style="font-family: var(--font-title); font-size: 1.5rem; margin-bottom: 1rem;">UI WUAZE</div>
+    <p>&copy; 2026 Design Lab | Developed by <br /><a href="https://ui.wuaze.com/ahmedabdelshafy" class="dev-tag">@Ahmed Abdelshafy</a></p>
+</footer>
+<script>
+    function filterTools() {
+        const input = document.getElementById('toolSearch').value.toLowerCase();
+        const cards = document.getElementsByClassName('tool-card');
+        const noResults = document.getElementById('noResults');
+        let hasResults = false;
+        
+        for (let i = 0; i < cards.length; i++) {
+            const name = cards[i].querySelector('span').textContent.toLowerCase();
+            
+            if (name.includes(input)) {
+                cards[i].classList.remove('hidden-tool');
+                cards[i].setAttribute('aria-hidden', 'false');
+                hasResults = true;
+            } else {
+                cards[i].classList.add('hidden-tool');
+                cards[i].setAttribute('aria-hidden', 'true');
+            }
+        }
+
+        if (hasResults) {
+            noResults.style.display = "none";
+        } else {
+            noResults.style.display = "block";
+        }
+    }
+
+    const phrases = [
+    // القائمة القديمة اللي عندك
+    "Simplicity is the ultimate sophistication.",
+    "Good design is obvious. Great design is transparent.",
+    "Design is not just what it looks like. Design is how it works.",
+    "White space is like air: it’s necessary for design to breathe.",
+    "Make it simple, but significant.",
+    "Digital design is like painting, except the paint never dries.",
+    
+    // الـ 20 مقولة الجديدة (مختارة بعناية للمصممين)
+    "Content precedes design. Design in the absence of content is not design, it’s decoration.",
+    "Styles come and go. Good design is a language, not a style.",
+    "Design is intelligence made visible.",
+    "The details are not the details. They make the design.",
+    "Design is the silent ambassador of your brand.",
+    "A designer knows he has achieved perfection not when there is nothing left to add, but when there is nothing left to take away.",
+    "Perfection is achieved through the elimination of the unnecessary.",
+    "Everything is designed. Few things are designed well.",
+    "If you think good design is expensive, you should look at the cost of bad design.",
+    "Design creates culture. Culture shapes values. Values determine the future.",
+    "The soul of the apartment is the geometric space and the light.",
+    "Usability is not a quality that can be spread on the code like butter.",
+    "Design is a formal response to a strategic ambition.",
+    "Don't build a link, build a relationship.",
+    "Simplicity is not the absence of clutter, that's a consequence of simplicity.",
+    "Graphic design will save the world right after rock and roll does.",
+    "To create a memorable design you need to start with a thought that’s worth remembering.",
+    "Your website is your 24/7 salesperson. Make it look the part.",
+    "Innovate, but don't forget to communicate.",
+    "Design is thinking made visual."
+];
+
+
+    function newPhrase() {
+        const phraseEl = document.getElementById('randomPhraseText');
+        const randomIdx = Math.floor(Math.random() * phrases.length);
+        
+        phraseEl.style.opacity = 0;
+        
+        setTimeout(() => {
+            phraseEl.textContent = `"${phrases[randomIdx]}"`;
+            phraseEl.style.opacity = 1;
+        }, 300);
+    }
+
+const menuBtn = document.getElementById('mobileMenuBtn');
+const nav = document.getElementById('mainNav');
+
+menuBtn.addEventListener('click', () => {
+    const isExpanded = menuBtn.getAttribute('aria-expanded') === 'true';
+    
+    // تحديث حالة الـ Accessibility
+    menuBtn.setAttribute('aria-expanded', !isExpanded);
+    nav.setAttribute('aria-hidden', isExpanded);
+    
+    // تغيير الكلاسات
+    nav.classList.toggle('active');
+    
+    // الأنيميشن
+    const spans = menuBtn.querySelectorAll('span');
+    spans[0].style.transform = nav.classList.contains('active') ? 'rotate(45deg) translate(5px, 6px)' : 'none';
+    spans[1].style.opacity = nav.classList.contains('active') ? '0' : '1';
+    spans[2].style.transform = nav.classList.contains('active') ? 'rotate(-45deg) translate(7px, -8px)' : 'none';
+});
+
+
+</script>
+<script type="text/javascript" charset="utf-8">
+    let deferredPrompt;
+const banner = document.getElementById('install-banner');
+const installBtn = document.getElementById('btn-install');
+const closeBtn = document.getElementById('btn-close');
+
+window.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent the mini-infobar from appearing on mobile
+    e.preventDefault();
+    // Stash the event so it can be triggered later
+    deferredPrompt = e;
+    // Update UI notify the user they can install the PWA
+    banner.style.display = 'flex';
+});
+
+installBtn.addEventListener('click', async () => {
+    if (deferredPrompt) {
+        // Show the install prompt
+        deferredPrompt.prompt();
+        // Wait for the user to respond to the prompt
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User choice: ${outcome}`);
+        // We've used the prompt, and can't use it again
+        deferredPrompt = null;
+        // Hide the banner
+        banner.style.display = 'none';
+    }
+});
+
+closeBtn.addEventListener('click', () => {
+    banner.style.display = 'none';
+});
+
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

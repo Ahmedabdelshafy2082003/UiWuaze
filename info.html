@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <link rel="icon" href="48x48.png" sizes="48x48" type="image/png">
+
+<link rel="icon" href="96x96.png" sizes="96x96" type="image/png">  
+    
+<title>UI-WUAZE</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+<link rel="manifest" href="/manifest.json">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root {
+    /* 1. Colors (الألوان) */
+    --clr-bg: #fcfcfd;
+    --clr-bg-dark: #0a0324;
+    --clr-text-main: #111111;
+    --clr-text-muted: #666666;
+    --clr-primary: #8c52ff;
+    --clr-primary-dark: #7a42eb;
+    --clr-primary-glow: rgba(140, 82, 255, 0.4);
+    --clr-secondary: #4b0082;
+    --clr-accent: #ff4757;
+    --clr-white: #ffffff;
+    
+    /* 2. Typography (الخطوط) */
+    --font-main: 'Inter', sans-serif;
+    --font-display: 'Chango', cursive;
+    --font-mono: 'Fira Code', monospace;
+    
+    /* 3. Layout (الأبعاد) */
+    --max-width-section: 78.125rem; /* 1250px */
+    
+    /* 4. Borders & Radii (الحواف) */
+    --radius-full: 6.25rem; /* 100px */
+    --radius-lg: 2.5rem; /* 40px */
+    --radius-md: 1.5rem; /* 24px */
+    
+    /* 5. Shadows (الظلال) */
+    --shadow-sm: 0 10px 20px rgba(0,0,0,0.02);
+    --shadow-md: 0 20px 40px rgba(0,0,0,0.05);
+    --shadow-primary: 0 20px 50px rgba(140, 82, 255, 0.25);
+    
+    /* 6. Animations (الحركة) */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html, body { width:100%; font-family: 'Cairo', sans-serif; background:#f5f5f5; overflow-x:hidden; }
+
+header { width:100%; background:rgba(255,255,255,0.95); backdrop-filter: blur(6px); position:fixed; top:0; left:0; z-index:20; border-bottom:1px solid #eee; }
+
+.navbar { max-width:1400px; margin:auto; padding:12px 20px; display:flex; align-items:center; justify-content:space-between; }
+
+.nav-left { display:flex; align-items:center; gap:15px; }
+
+.logo { width:55px; height:55px; border-radius:8px; cursor:pointer; }
+
+.nav-right { display:flex; align-items:center; gap:25px; }
+
+.nav-right a { text-decoration:none; font-size:18px; color:#333; font-weight:700; }
+
+/* MAIN CONTENT */
+
+main { max-width:1000px; margin:120px auto 60px; padding:20px; text-align:left; }
+
+.main-image { width:100%; border-radius:12px; margin-bottom:40px; }
+
+.main-paragraph { font-size:20px; color:#333; margin-bottom:25px; line-height:1.7; }
+
+/* BUTTON */
+
+.btn { display:inline-flex; align-items:center; gap:10px; padding:14px 30px; background:#010101; color:#fff; font-weight:700; font-size:18px; border-radius:12px; text-decoration:none; transition:.3s; }
+
+.btn:hover { background:#222; }
+
+.btn i { font-size:24px; }
+
+/* RESPONSIVE */
+
+@media (max-width:768px) {
+
+    .main-paragraph { font-size:18px; }
+
+    .nav-right a { font-size:16px; }
+
+}
+
+/* FOOTER */
+
+        footer {
+            background: #111;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 4rem 4rem 0 0;
+        }
+        .dev-tag { color: var(--clr-white); text-decoration: none; font-weight: 800; }
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="navbar">
+
+        <div class="nav-left">
+
+            <img src="logo.png" class="logo" alt="LOGO" onclick="location.href='https://ui.wuaze.com';">
+
+        </div>
+
+        <div class="nav-right">
+
+            <a href="#">About Us</a>
+
+            <a href="https://wa.me/201112313164?text=Hello%20Mr.%20Ahmed%2C%20may%20I%20speak%20with%20you%3F">Contact</a>
+
+        </div>
+
+    </div>
+
+</header>
+
+<main>
+
+    <img src="img/info2.png" alt="Information" class="main-image">
+
+    <p class="main-paragraph">
+
+        Ui-Wuaze requires no registration or account creation. Access all design tools instantly without any limitations for a smooth and fast experience.
+
+    </p>
+
+    <p class="main-paragraph">
+
+        Our platform provides a wide range of CSS design tools that you can apply directly with a click, making design experimentation fast and interactive.
+
+    </p>
+
+    <p class="main-paragraph">
+
+        Ui-Wuaze is built to help beginners learn web design and coding practically and easily, with a clear and professional user interface.
+
+    </p>
+
+    <p class="main-paragraph">
+
+        Your privacy is our priority: no personal data is required, collected, or stored. Use our tools freely and securely without any registration or sharing of information.
+
+    </p>
+
+    <a href="https://www.tiktok.com/@wuaze" target="_blank" class="btn">
+
+        <i class="fab fa-tiktok"></i> Visit TikTok Page
+
+    </a>
+
+</main>
+
+<footer>
+    <div style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">UI WUAZE</div>
+    <p>&copy; 2026 Design Lab | Developed by <a href="https://ui.wuaze.com/ahmedabdelshafy" class="dev-tag">@Ahmed Abdelshafy</a></p>
+</footer>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>

@@ -1,0 +1,413 @@
+/* --- UI Wuaze Global Header Styles --- */
+.main-header { 
+    width: 100%; 
+    position: fixed; 
+    top: 1rem; 
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    z-index: 9999; 
+    padding: 0 1rem;
+}
+
+.navbar {
+    width: 100%; 
+    max-width: 1200px; 
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 100px;
+    padding: 0.6rem 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08); 
+    border: 1px solid rgba(255,255,255,0.4);
+}
+
+.nav-container { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+/* تنسيق اللوجو ليكون مطابقاً لصفحة Index */
+.logo-wrapper { 
+    display: flex; 
+    align-items: center; 
+    text-decoration: none; 
+}
+
+.logo-img { 
+    width: 35px;  /* الحجم الدقيق المعتمد في الـ index */
+    height: 35px; 
+    border-radius: 8px; /* الزاوية الدائرية المعتمدة */
+    object-fit: contain;
+    transition: 0.3s;
+}
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+.nav-links { display: flex; align-items: center; gap: 1.5rem; }
+
+.nav-link { 
+    text-decoration: none; 
+    color: #111; 
+    font-weight: 700; 
+    font-size: 14px; 
+    font-family: 'Inter', sans-serif;
+    transition: 0.3s;
+}
+
+.nav-link:hover { color: #8c52ff; }
+
+.nav-cta-btn {
+    background: #0a0324; 
+    color: white !important; 
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px; 
+    text-decoration: none;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: 0.3s;
+}
+
+.nav-cta-btn:hover { background: #8c52ff; transform: translateY(-2px); }
+
+/* --- Mobile Menu --- */
+.mobile-toggle {
+    display: none; 
+    background: transparent !important; /* التأكد من شفافية الخلفية */
+    border: none !important; 
+    outline: none !important; /* إزالة إطار التحديد الأزرق */
+    cursor: pointer;
+    flex-direction: column; 
+    gap: 5px;
+    -webkit-tap-highlight-color: transparent; /* هذا السطر يزيل المربع الرمادي في الهاتف */
+}
+
+.mobile-toggle span {
+    width: 25px; height: 3px; background: #0a0324; border-radius: 5px; transition: 0.3s;
+}
+
+@media (max-width: 768px) {
+    /* 1. إظهار زر القائمة (الهامبرغر) */
+    .mobile-toggle {
+        display: flex !important;
+        z-index: 99999;
+    }
+
+    /* 2. تصغير حجم الروابط الرئيسية لتقليل الارتفاع الإجمالي */
+    .nav-links {
+        display: none;
+        position: absolute; 
+        top: 100%; 
+        right: 10px; 
+        width: 240px;
+        max-height: 80vh; /* تحديد أقصى ارتفاع بـ 80% من طول الشاشة */
+        overflow-y: auto; /* السماح بالتمرير إذا كانت القائمة طويلة */
+        background: white; 
+        flex-direction: column; 
+        padding: 1rem;
+        border-radius: 1.5rem; 
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+
+    .nav-links.active { 
+        display: flex; 
+        animation: slideDownFade 0.4s ease forwards;
+    }
+
+    /* 3. تنسيق قائمة الأدوات (Dropdown) المنسدلة */
+    .tools-menu {
+        width: 100%;
+        margin: 4px 0;
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.02);
+    }
+
+    .tools-btn {
+        padding: 10px 15px !important; /* تقليل الحشو لتصغير الارتفاع */
+        font-size: 14px;
+    }
+
+    .tools-dropdown {
+        position: static !important;
+        display: none !important;
+        width: 100% !important;
+        padding: 0 10px 5px 20px !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        /* تحديد ارتفاع أقصى للدروب داون نفسها */
+        max-height: 200px; 
+        overflow-y: auto;
+    }
+
+    /* أنميشن النزول عند الفتح */
+    .tools-menu.mobile-open .tools-dropdown {
+        display: flex !important;
+        animation: dropdownIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    /* تصغير الروابط الداخلية */
+    .tools-dropdown a {
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* --- الأنميشن الجديد --- */
+@keyframes slideDownFade {
+    from { 
+        opacity: 0; 
+        transform: translateY(-10px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(10px); 
+    }
+}
+
+@keyframes dropdownIn {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: scaleY(0);
+        transform-origin: top;
+    }
+    to {
+        opacity: 1;
+        max-height: 250px; /* الارتفاع الذي ستصل إليه */
+        transform: scaleY(1);
+        transform-origin: top;
+    }
+}
+
+.tools-menu {
+    position: relative;
+    padding: 0 10px;
+}
+
+/* Button Styling */
+.tools-btn {
+    color: #333;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s ease;
+}
+
+.tools-btn:hover {
+    color: #5D0BDE;
+}
+
+/* Dropdown Menu - Desktop */
+.tools-dropdown {
+    position: absolute;
+    top: 120%; /* مسافة بسيطة تحت الزر */
+    left: 0;
+    background: rgba(255, 255, 255, 0.98);
+    min-width: 260px;
+    border-radius: 15px;
+    padding: 12px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1), 0 5px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.05);
+    backdrop-filter: blur(10px); /* تأثير زجاجي خفيف */
+    
+    /* حركات الظهور */
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1000;
+}
+
+/* Show Dropdown on Hover */
+.tools-menu:hover .tools-dropdown {
+    display: flex;
+    flex-direction: column;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Links inside Dropdown */
+.tools-dropdown a {
+    padding: 10px 15px;
+    color: #444;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.tools-dropdown a:hover {
+    background: #f4f0ff;
+    color: #5D0BDE;
+    padding-left: 20px; /* حركة بسيطة لليمين */
+}
+
+.tools-dropdown a.active {
+    background: #5D0BDE;
+    color: #fff;
+}
+@media (max-width: 768px) {
+    /* الحاوية الرئيسية للأدوات في الموبايل */
+    .tools-menu {
+        width: 100%;
+        margin: 5px 0;
+        border-radius: 15px;
+        overflow: hidden;
+        background: rgba(0, 0, 0, 0.03); /* تمييز بسيط جداً عن خلفية المنيو */
+        transition: 0.3s ease;
+    }
+
+    /* زر Tools في الموبايل */
+    .tools-btn {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 15px;
+        color: #6100ff;
+        border: none;
+        display: flex;
+        justify-content: space-between; /* وضع السهم في أقصى اليمين */
+        align-items: center;
+    }
+
+    /* أيقونة السهم - تأكد من إضافة <i> في الـ HTML */
+    .tools-btn i {
+        font-size: 12px;
+        transition: transform 0.3s ease;
+        opacity: 0.5;
+    }
+
+    /* عند فتح القائمة: تغيير لون الزر وتدوير السهم */
+    .tools-menu.mobile-open {
+        background: rgba(93, 11, 222, 0.05); /* لون خفيف جداً من هويتك البصرية */
+    }
+    
+    .tools-menu.mobile-open .tools-btn {
+        color: #6100ff;
+    }
+
+    .tools-menu.mobile-open .tools-btn i {
+        transform: rotate(180deg);
+        opacity: 1;
+    }
+
+    /* القائمة المنسدلة في الموبايل */
+    .tools-dropdown {
+        position: static; /* لكي تدفع العناصر تحتها ولا تغطيها */
+        display: none; 
+        width: 100%;
+        padding: 0 10px 10px 25px; /* إزاحة لليمين لتبدو كقائمة فرعية */
+        background: transparent;
+        box-shadow: none;
+        border: none;
+        opacity: 1;
+        transform: none;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .tools-menu.mobile-open .tools-dropdown {
+        display: flex;
+        animation: slideDown 0.3s ease-out; /* حركة دخول ناعمة */
+    }
+
+    /* روابط الأدوات داخل الموبايل */
+    .tools-dropdown a {
+        padding: 10px 15px;
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #555;
+        border-radius: 10px;
+        border-bottom: none; /* حذف الخطوط القديمة البشعة */
+        background: transparent;
+        transition: 0.2s;
+    }
+
+    .tools-dropdown a:hover, 
+    .tools-dropdown a.active {
+        background: white; /* تبدو كبطاقة بيضاء فوق الخلفية الرمادية خفيفة */
+        color: #5D0BDE;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    }
+
+    /* حركة الدخول */
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
+/* /* --- تحديث ألوان القائمة المنسدلة (Dropdown) --- */
+
+/* 1. تنسيق الأيقونات داخل القائمة */
+.tools-dropdown a i {
+    width: 25px;
+    margin-right: 12px;
+    font-size: 1.1rem;
+    color: #6100ff; /* اللون الموف الفاتح المعتمد */
+    transition: 0.3s ease;
+    display: inline-flex;
+    justify-content: center;
+}
+
+/* 2. تنسيق الروابط عند الحوم (Hover) */
+.tools-dropdown a:hover {
+    background: rgba(97, 0, 255, 0.05) !important; /* خلفية خفيفة جداً من اللون الموف */
+    color: #2d05b4 !important; /* تغيير النص للموف الغامق */
+    padding-left: 25px !important; /* حركة انزلاق بسيطة */
+}
+
+.tools-dropdown a:hover i {
+    color: #2d05b4; /* تغيير لون الأيقونة عند الحوم */
+    transform: scale(1.15);
+}
+
+/* 3. تنسيق العنصر النشط (Active Page) */
+.tools-dropdown a.active {
+    background: #6100ff !important; /* خلفية موف كاملة */
+    color: #ffffff !important;      /* نص أبيض */
+    font-weight: 600;
+}
+
+.tools-dropdown a.active i {
+    color: #ffffff !important; /* أيقونة بيضاء للعنصر النشط */
+}
+
+/* --- تعديلات وضع الموبايل --- */
+@media (max-width: 768px) {
+    /* تمييز الحاوية المفتوحة في الموبايل */
+    .tools-menu.mobile-open {
+        background: rgba(97, 0, 255, 0.04);
+        border-left: 3px solid #6100ff; /* خط جانبي جمالي */
+    }
+
+    .tools-menu.mobile-open .tools-btn {
+        color: #2d05b4;
+    }
+
+    /* الروابط داخل الموبايل */
+    .tools-dropdown a.active {
+        background: #2d05b4 !important; /* لون أغمق قليلاً للموبايل لتباين أفضل */
+        box-shadow: 0 4px 12px rgba(45, 5, 180, 0.2);
+    }
+}
+
+/* تحسين شكل السهم في الزر الرئيسي */
+.tools-btn i {
+    color: #6100ff;
+    transition: 0.3s;
+}
+
+.tools-menu:hover .tools-btn {
+    color: #2d05b4;
+}

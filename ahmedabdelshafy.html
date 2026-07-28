@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmed Abdel-shafy | Full-Stack Developer</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@300;400;600;700&family=Inter:wght@400;700&family=Chango&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="/manifest.json">
+
+    <link rel="stylesheet" href="header.css">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Ahmed Abdelshafy",
+  "nationality": "Egypt",
+  "jobTitle": "Frontend Web Developer",
+  "url": "https://ui.wuaze.com/",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Independent Developer"
+  },
+  "hasOccupation": {
+    "@type": "Occupation",
+    "name": "Frontend Web Developer"
+  },
+  "subjectOf": [
+    {
+      "@type": "WebSite",
+      "name": "UI Wuaze",
+      "url": "https://ui.wuaze.com/",
+      "description": "Modern UI Components Library."
+    },
+    {
+      "@type": "CreativeWork",
+      "name": "Edres Law",
+      "description": "Former educational platform for teaching law students in Kuwait. Developed by Ahmed Abdelshafy."
+    }
+  ],
+  "sameAs": [
+    "https://www.youtube.com/@Ahmed_Abdelshafy"
+  ]
+}
+</script>
+    <style>
+        :root {
+            --primary: #8c52ff;
+            --primary-glow: rgba(140, 82, 255, 0.15);
+            --text-dark: #0a0324;
+            --text-muted: #666;
+            --white: #ffffff;
+            --bg-light: #f8f9fc;
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            padding-top: 100px; 
+        }
+
+        .hero-section { padding: 60px 20px; text-align: center; }
+
+        .profile-img { 
+            width: 160px; height: 160px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 5px solid var(--white);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            transition: var(--transition);
+        }
+
+        .role-badge {
+            display: inline-block;
+            background: var(--white);
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid rgba(140, 82, 255, 0.1);
+        }
+
+        .bio-grid-text { 
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1rem; 
+            color: var(--text-muted); 
+            line-height: 1.8; 
+            margin: 30px auto 60px;
+            max-width: 850px;
+        }
+
+        .bio-grid-text p { margin-bottom: 10px; }
+        .bio-grid-text a { color: var(--primary); text-decoration: none; font-weight: 700; border-bottom: 2px solid var(--primary-glow); }
+
+        /* --- Project Grid Structure --- */
+        .projects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 30px; 
+            max-width: 1200px;
+            margin: 50px auto; 
+            padding: 0 20px;
+        }
+
+        /* --- Enhanced Project Card --- */
+        .project-card { 
+            background: var(--white); 
+            border-radius: 24px; 
+            padding: 40px 30px; 
+            transition: var(--transition); 
+            border: 1px solid rgba(0,0,0,0.02);
+            text-decoration: none;
+            color: inherit;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Background Image Hover Logic */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(10, 3, 36, 0.7), rgba(10, 3, 36, 0.7)), var(--hover-bg);
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .project-card:hover { 
+            transform: translateY(-15px); 
+            box-shadow: 0 30px 60px rgba(10, 3, 36, 0.15); 
+        }
+
+        .project-card:hover::before { opacity: 1; }
+
+        /* Logo Size Enhancement */
+        .project-logo { 
+            width: 85px; height: 85px; 
+            border-radius: 18px; 
+            margin-bottom: 20px;
+            transition: var(--transition);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .project-card:hover .project-logo { 
+            transform: scale(1.15) rotate(-5deg); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .project-card h3 { 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .project-card:hover h3 { color: var(--white); }
+
+        /* Text Content Change Logic */
+        .project-card p { 
+            font-size: 0.95rem; 
+            color: var(--text-muted); 
+            text-align: center; 
+            line-height: 1.6;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .desc-default, .desc-hover {
+            transition: var(--transition);
+            display: block;
+        }
+
+        .desc-hover {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            opacity: 0;
+            transform: translateY(10px);
+            color: rgba(255,255,255,0.9);
+        }
+
+        .project-card:hover .desc-default { opacity: 0; transform: translateY(-10px); }
+        .project-card:hover .desc-hover { opacity: 1; transform: translateY(0); }
+
+        .view-btn {
+            margin-top: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition);
+        }
+
+        .project-card:hover .view-btn { opacity: 1; transform: translateY(0); color: var(--white); }
+
+        .soon-badge {
+            font-size: 10px;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 800;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        footer {
+            background: #111;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 4rem 4rem 0 0;
+        }
+        .dev-tag { color: var(--clr-white); text-decoration: none; font-weight: 800; }
+
+
+        @media (max-width: 768px) {
+            .bio-grid-text { font-size: 0.95rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-placeholder"></div>
+
+    <main class="hero-section">
+        <div class="profile-wrapper">
+            <img src="img/ahmed.jpg" alt="Ahmed Abdel-shafy" class="profile-img">
+        </div>
+        
+        <div class="bio-container">
+            <span class="role-badge">Full-Stack Developer | BIS Graduate</span>
+            <h1 style="font-size: clamp(2.2rem, 6vw, 3.5rem); font-weight: 900; margin-bottom: 15px; letter-spacing: -1px;">Ahmed Abdel-shafy</h1>
+            
+            <div class="bio-grid-text">
+                <p>BIS Graduate Bridging Business And Tech Needs</p>
+                <p>Learned From <a href="https://www.udacity.com" target="_blank">Udacity</a> And <a href="https://www.youtube.com/@HassounaAcademy" target="_blank">Hassouna Academy</a></p>
+                <p>Building Ethical And High Performance UI Designs</p>
+            </div>
+
+            <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px;">Featured Work</h2>
+            <p style="color: var(--text-muted); margin-bottom: 40px;">Selected projects that define my digital craft.</p>
+            
+            <div class="projects-grid">
+                <a href="https://web.archive.org/web/20230724021237/https://edres-law.com/" target="_blank" class="project-card" style="--hover-bg: url('942shots_so.png');">
+                    <img src="img/edres-law.jpg" alt="Edres Law" class="project-logo">
+                    <h3>Edres Law</h3>
+                    <p>
+                        <span class="desc-default">A specialized platform for Kuwaiti law students, bridging complex legal studies with digital accessibility.</span>
+                        <span class="desc-hover">Building the future of legal tech in Kuwait through intuitive and accessible web solutions.</span>
+                    </p>
+                    <div class="view-btn">Visit Archive <i class="fas fa-external-link-alt"></i></div>
+                </a>
+
+                <a href="https://ui.wuaze.com" target="_blank" class="project-card" style="--hover-bg: url('782shots_so.png');">
+                    <img src="img/UiWuaze.png" alt="Ui Wuaze" class="project-logo">
+                    <h3>Ui Wuaze</h3>
+                    <p>
+                        <span class="desc-default">The CSS ecosystem built for speed. Lightweight components and modern UI tools for developers.</span>
+                        <span class="desc-hover">A comprehensive toolkit for developers to build sleek, high-performance interfaces in minutes.</span>
+                    </p>
+                    <div class="view-btn">Explore Lab <i class="fas fa-arrow-right"></i></div>
+                </a>
+                
+                <div class="project-card" style="cursor: default; --hover-bg: url('662shots_so.png');">
+                    <img src="img/emtyaz.png" alt="Emtyaz" class="project-logo" style="filter: grayscale(1);">
+                    <h3>Emtyaz <span class="soon-badge">SOON</span></h3>
+                    <p>
+                        <span class="desc-default">My flagship graduation project focused on academic excellence through scalable web technology.</span>
+                        <span class="desc-hover">Revolutionizing the way academic data is managed and presented for graduating seniors.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+    <div style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.6rem;">UI WUAZE</div>
+    <p>&copy; 2026 Design Lab | Developed by </p>
+</footer>
+
+    <script>
+        function loadHeader() {
+            fetch('headerpage.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('header-placeholder').innerHTML = data;
+                    initMobileMenu();
+                })
+                .catch(err => console.error('Error loading header:', err));
+        }
+
+        function initMobileMenu() {
+            const btn = document.getElementById('mobileMenuBtn');
+            const nav = document.getElementById('mainNav');
+
+            if (btn && nav) {
+                btn.addEventListener('click', () => {
+                    nav.classList.toggle('active');
+                    const spans = btn.querySelectorAll('span');
+                    const isActive = nav.classList.contains('active');
+                    
+                    spans[0].style.transform = isActive ? 'rotate(45deg) translate(5px, 6px)' : 'none';
+                    spans[1].style.opacity = isActive ? '0' : '1';
+                    spans[2].style.transform = isActive ? 'rotate(-45deg) translate(7px, -8px)' : 'none';
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadHeader);
+    </script>
+    <script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

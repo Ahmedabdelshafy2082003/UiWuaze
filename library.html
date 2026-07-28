@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ui Wuaze |The best library for ready-made CSS-designed elements </title>
+    <meta name="description" content="Explore and discover a wide range of free UI components and design resources at UI Wuaze Library. Elevate your web projects with modern, ready-to-use elements.">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://ui.wuaze.com/library">
+<meta property="og:title" content="UI Wuaze Library | Explore and Discover UI Resources">
+<meta property="og:description" content="Access a comprehensive collection of free UI components and design tools. Simplified design for modern developers.">
+<meta property="og:image" content="https://i.top4top.io/p_3744fcc4y0.png">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="UI Wuaze Library">
+<meta name="twitter:description" content="Explore and discover professional UI and design resources for free.">
+<meta name="twitter:image" content="https://i.top4top.io/p_3744fcc4y0.png">
+
+<link rel="icon" href="48x48.png" sizes="48x48" type="image/png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="data.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+                    colors: { 
+                        brand: '#6336fa',      
+                        accent: '#d8ccff',     
+                        darkBg: '#0a0516'      
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .preview-container { height: 200px; position: relative; background-color: #ffffff; }
+        .dark .preview-container { background-color: #1a1528; }
+        .code-preview { border: none; width: 100%; height: 100%; pointer-events: auto; }
+        .card-enter { animation: fadeInUp 0.4s ease forwards; }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        
+        .verified-icon {
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 18px;
+            height: 18px;
+            z-index: 10;
+        }
+
+        #cards-container {
+            content-visibility: auto;
+            contain-intrinsic-size: 300px;
+        }
+        
+        .loader-placeholder {
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 transition-colors duration-300">
+
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-slate-200 dark:border-slate-800">
+    <nav class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+        
+        <a href="index.html" class="flex items-center gap-3 group">
+            <div class="w-11 h-11 relative overflow-hidden transition-transform group-hover:scale-110">
+                <img src="logo06.webp" alt="UW Logo" class="w-full h-full object-contain block">
+            </div>
+
+
+        </a>
+
+        <div class="relative flex-1 max-w-xl">
+            <input type="text" id="search-input" oninput="searchCards()" placeholder="Search components..." 
+                   class="w-full py-2.5 pl-11 pr-4 border border-slate-200 dark:border-slate-700 rounded-2xl bg-white dark:bg-slate-800 focus:ring-2 focus:ring-brand outline-none transition-all">
+            <svg class="w-5 h-5 absolute left-4 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </div>
+
+        <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors shadow-sm">
+            <svg id="theme-icon" class="w-5 h-5 text-brand" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 100 2h1z"></path>
+            </svg>
+        </button>
+    </nav>
+</header>
+
+<div class="flex flex-col md:flex-row max-w-7xl mx-auto px-6 py-8 gap-8 border border-slate-200 dark:border-slate-800 rounded-[2rem] mt-8">
+    <aside class="w-full md:w-64 shrink-0 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 pr-0 md:pr-6 mb-6 md:mb-0">
+        <div class="sticky top-24">
+            <h2 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Categories</h2>
+            <div class="flex md:flex-col gap-2 overflow-x-auto pb-4 md:pb-6 hide-scrollbar" id="filter-list">
+                <button onclick="filterCards('all', this)" id="all-btn" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl bg-brand text-white font-semibold text-sm transition-all shadow-md shadow-brand/20">
+                    All Components
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <main class="flex-1">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="cards-container"></div>
+        <div id="loading-trigger" class="h-20 w-full flex items-center justify-center">
+            <div class="w-6 h-6 border-2 border-brand border-t-transparent rounded-full animate-spin opacity-0 transition-opacity" id="loader-icon"></div>
+        </div>
+        <div id="no-results" class="hidden text-center py-20 text-slate-500">No components found.</div>
+    </main>
+</div>
+
+<script>
+    const container = document.getElementById('cards-container');
+    const noResults = document.getElementById('no-results');
+    const loaderIcon = document.getElementById('loader-icon');
+    
+    let currentData = []; 
+    let itemsToShow = 12; 
+    let currentIndex = 0; 
+    let activeCategory = 'all';
+
+    const fullData = projectData.designs.map(design => ({
+        ...design,
+        publisher: projectData.publishers.find(p => p.id === design.pubId) || { name: 'Anonymous', avatar: 'https://via.placeholder.com/100', isVerified: false }
+    }));
+
+    currentData = [...fullData];
+
+    const categories = ['Button', 'Check box', 'Toggle switch', 'Card', 'Loader', 'Input', 'Radio button', 'Form', 'Pattern', 'Tooltip'];
+    const filterList = document.getElementById('filter-list');
+    categories.forEach(cat => {
+        filterList.innerHTML += `<button onclick="filterCards('${cat}', this)" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-brand/10 text-sm font-medium transition-all">${cat}</button>`;
+    });
+
+   function createCardHTML(item) {
+    const verifiedBadge = item.publisher.isVerified ? `<img src="https://l.top4top.io/p_37419yq8q0.png" class="verified-icon">` : '';
+
+    return `
+        <div class="card-item card-enter group relative bg-white dark:bg-[#1a1528] rounded-3xl border border-slate-200 dark:border-slate-800 overflow-hidden hover:shadow-2xl transition-all duration-500" data-id="${item.id}">
+            
+<a href="details.html?id=${item.id}&fromCat=${activeCategory}" class="absolute inset-0 z-20" aria-label="View Details"></a>
+
+
+            <div class="preview-container relative z-10">
+                <iframe class="code-preview opacity-0 transition-opacity duration-500" data-rendered="false" style="pointer-events: none;"></iframe>
+                
+                <div class="absolute inset-0 flex items-center justify-center bg-slate-50 dark:bg-slate-900/50 loader-placeholder">
+                    <div class="w-4 h-4 border-2 border-brand/20 border-t-brand rounded-full animate-spin"></div>
+                </div>
+
+                <button onclick="event.preventDefault(); event.stopPropagation(); copyCode(this, '${item.id}')" 
+                        class="absolute top-3 right-3 z-30 p-2 bg-white/90 dark:bg-brand shadow-sm rounded-lg text-brand dark:text-white opacity-0 group-hover:opacity-100 transition-all">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            </div>
+
+            <div class="p-5 relative z-10">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <img src="${item.publisher.avatar}" class="w-10 h-10 rounded-full object-cover ring-2 ring-slate-100 dark:ring-brand/20">
+                            ${verifiedBadge}
+                        </div>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-slate-300">${item.publisher.name}</span>
+                    </div>
+                    <span class="text-[10px] font-bold px-2 py-1 rounded-lg bg-brand/10 text-brand uppercase tracking-tighter">${item.category}</span>
+                </div>
+                <h3 class="font-bold text-slate-800 dark:text-slate-100 mb-4 truncate">${item.title}</h3>
+                <div class="block text-center py-2 rounded-xl bg-slate-50 dark:bg-brand/10 text-brand text-xs font-bold transition-all shadow-sm">
+                    View Full Assets
+                </div>
+            </div>
+        </div>`;
+}
+
+    function renderIframe(cardElement) {
+        const iframe = cardElement.querySelector('iframe');
+        if (iframe.getAttribute('data-rendered') === 'true') return;
+
+        const id = cardElement.getAttribute('data-id');
+        const item = fullData.find(d => d.id == id);
+        const isDark = document.documentElement.classList.contains('dark');
+        
+        const previewHtml = `<!DOCTYPE html><html class="${isDark ? 'dark' : ''}"><head><script src="https://cdn.tailwindcss.com"><\/script><style>body { margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: transparent; } ${item.css}</style></head><body>${item.html}</body></html>`;
+        
+        iframe.srcdoc = previewHtml;
+        iframe.onload = () => {
+            iframe.classList.remove('opacity-0');
+            cardElement.querySelector('.loader-placeholder')?.classList.add('opacity-0');
+            setTimeout(() => cardElement.querySelector('.loader-placeholder')?.remove(), 300);
+            iframe.setAttribute('data-rendered', 'true');
+        };
+    }
+
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                renderIframe(entry.target);
+            }
+        });
+    }, { rootMargin: '200px' });
+
+    function loadMoreCards() {
+        if (currentIndex >= currentData.length) return;
+
+        loaderIcon.classList.add('opacity-100');
+        
+        const nextBatch = currentData.slice(currentIndex, currentIndex + itemsToShow);
+        
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = nextBatch.map(item => createCardHTML(item)).join('');
+        
+        const newCards = Array.from(tempDiv.children);
+        newCards.forEach(card => {
+            container.appendChild(card);
+            cardObserver.observe(card);
+        });
+
+        currentIndex += itemsToShow;
+        loaderIcon.classList.remove('opacity-100');
+    }
+
+    const scrollObserver = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+            loadMoreCards();
+        }
+    }, { threshold: 0.1 });
+
+    scrollObserver.observe(document.getElementById('loading-trigger'));
+
+    function filterCards(category, btn) {
+        currentIndex = 0;
+        container.innerHTML = '';
+        activeCategory = category;
+        
+        currentData = category === 'all' ? fullData : fullData.filter(d => d.category === category);
+        
+        if (currentData.length === 0) {
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            loadMoreCards();
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(b => b.className = "filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-brand/10 text-sm font-medium transition-all");
+        btn.className = "filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl bg-brand text-white font-semibold text-sm transition-all shadow-md shadow-brand/20";
+    }
+
+    function searchCards() {
+        const query = document.getElementById('search-input').value.toLowerCase();
+        currentIndex = 0;
+        container.innerHTML = '';
+        
+        currentData = fullData.filter(d => 
+            d.title.toLowerCase().includes(query) || 
+            d.publisher.name.toLowerCase().includes(query) ||
+            d.category.toLowerCase().includes(query)
+        );
+
+        if (currentData.length === 0) {
+            noResults.classList.remove('hidden');
+        } else {
+            noResults.classList.add('hidden');
+            loadMoreCards();
+        }
+    }
+
+    function toggleDarkMode() {
+        const html = document.documentElement;
+        html.classList.toggle('dark');
+        const isDark = html.classList.contains('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        
+        const currentScrollPos = window.scrollY;
+        container.innerHTML = '';
+        const savedCount = currentIndex;
+        currentIndex = 0;
+        
+        // إعادة بناء الكروت الظاهرة لتحديث ثيم الـ iframes
+        for(let i=0; i < Math.ceil(savedCount/itemsToShow); i++) {
+            loadMoreCards();
+        }
+        window.scrollTo(0, currentScrollPos);
+    }
+
+    function copyCode(btn, id) {
+        const item = fullData.find(d => d.id == id);
+        if(item) {
+            navigator.clipboard.writeText(item.html).then(() => {
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '✅';
+                setTimeout(() => btn.innerHTML = originalIcon, 1500);
+            });
+        }
+    }
+
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    }
+
+    loadMoreCards();
+    function recoverState() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const scrollToId = urlParams.get('scrollTo');
+    const catToFilter = urlParams.get('cat');
+
+    if (catToFilter && catToFilter !== 'all') {
+        // 1. تفعيل زرار الفلتر المناسب برمجياً
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            // بنشوف الزرار اللي مكتوب عليه اسم الكاتجوري
+            if (btn.innerText.trim() === catToFilter || (catToFilter === 'all' && btn.id === 'all-btn')) {
+                filterCards(catToFilter, btn); 
+            }
+        });
+    }
+
+    if (scrollToId) {
+        // 2. البحث عن العنصر في البيانات المفلترة حالياً
+        // الانتظار قليلاً لضمان أن الفلتر خلص تحميل العناصر
+        setTimeout(() => {
+            const targetIndex = currentData.findIndex(d => d.id == scrollToId);
+            
+            if (targetIndex !== -1) {
+                // تحميل الدفعات لحد ما نوصل للعنصر
+                while (currentIndex <= targetIndex && currentIndex < currentData.length) {
+                    loadMoreCards();
+                }
+
+                // السكرول للعنصر
+                setTimeout(() => {
+                    const targetElement = document.querySelector(`[data-id="${scrollToId}"]`);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetElement.classList.add('ring-4', 'ring-brand', 'ring-offset-8');
+                        setTimeout(() => targetElement.classList.remove('ring-4', 'ring-brand', 'ring-offset-8'), 3000);
+                    }
+                }, 500);
+            }
+        }, 300);
+    }
+}
+
+// استدعاء الوظيفة عند تحميل الصفحة
+window.addEventListener('load', recoverState);
+
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

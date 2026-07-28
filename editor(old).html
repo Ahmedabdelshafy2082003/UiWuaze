@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ui Wuaze Editor</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+<link rel="manifest" href="/manifest.json">
+
+    <style>
+
+        :root {
+
+            --bg-color: #11113d;
+
+            --line-height: 24px;
+
+            --dark-btn-grad: linear-gradient(135deg, #ffffff 0%, #f3eaff 100%);
+
+            --light-btn-grad: linear-gradient(135deg, #6c05eb 0%, #a063f8 100%);
+
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body, html { 
+
+            height: 100%; width: 100%; 
+
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+
+            overflow: hidden;
+
+        }
+
+        body.dark { background: var(--bg-color); color: #fff; }
+
+        body.light { background: #f4f7f6; color: #000; }
+
+        .toolbar {
+
+            display: flex; 
+
+            flex-wrap: wrap;
+
+            align-items: center; 
+
+            padding: 10px; 
+
+            gap: 8px;
+
+            border-bottom: 1px solid #ddd; 
+
+            background: inherit;
+
+            z-index: 1000;
+
+        }
+
+        .file-status {
+
+            width: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 5px 10px;
+
+            background: rgba(0,0,0,0.05);
+
+            font-size: 13px;
+
+            border-radius: 5px;
+
+            margin-bottom: 5px;
+
+        }
+
+        .btn { 
+
+            flex: 1 1 auto;
+
+            min-width: 80px;
+
+            padding: 10px 5px; 
+
+            border: none; 
+
+            border-radius: 8px; 
+
+            cursor: pointer; 
+
+            font-weight: bold; 
+
+            font-size: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 5px;
+
+            transition: 0.2s;
+
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        }
+
+        .btn-exit { background: #ff4444 !important; color: white !important; }
+
+        body.dark .btn:not(.btn-exit) { background: var(--dark-btn-grad); color: #090324; }
+
+        body.light .btn:not(.btn-exit) { background: var(--light-btn-grad); color: #fff; }
+
+        .main-container {
+
+            display: flex; 
+
+            height: calc(100vh - 120px); 
+
+            width: 100%;
+
+            position: relative;
+
+        }
+
+        #line-numbers {
+
+            width: 40px; background: rgba(0,0,0,0.05);
+
+            padding: 20px 0; color: #888; text-align: center;
+
+            font-size: 14px; line-height: var(--line-height);
+
+            border-right: 1px solid #ddd;
+
+            overflow: hidden;
+
+        }
+
+        .editor-holder { flex: 1; position: relative; overflow: hidden; background: transparent; }
+
+        #editing, #highlighting {
+
+            position: absolute; top: 0; left: 0;
+
+            width: 100%; height: 100%;
+
+            padding: 20px;
+
+            font-size: 15px; line-height: var(--line-height);
+
+            font-family: inherit;
+
+            white-space: pre;
+
+            tab-size: 4; border: none; outline: none;
+
+            overflow: auto;
+
+        }
+
+        #editing {
+
+            background: transparent; color: transparent;
+
+            caret-color: #6c05eb; z-index: 3; resize: none;
+
+        }
+
+        body.dark #editing { caret-color: white; }
+
+        #highlighting { 
+
+            z-index: 2; 
+
+            pointer-events: none; 
+
+            white-space: pre-wrap; 
+
+            word-wrap: break-word;
+
+            color: inherit; /* ليرث اللون من الـ body (أبيض أو أسود) */
+
+        }
+
+        #code-content { white-space: pre; color: inherit; }
+
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 2000; backdrop-filter: blur(4px); }
+
+        .modal { 
+
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+
+            background: #1a1a4d; padding: 25px; border-radius: 15px; 
+
+            width: 90%; max-width: 350px;
+
+            display: none; z-index: 2001; border: 2px solid #6c05eb; color: white;
+
+            text-align: center;
+
+        }
+
+        #preview-frame { display: none; width: 100%; height: 100vh; background: #fff; border: none; }
+
+        @media (max-width: 480px) {
+
+            #editing, #highlighting { font-size: 14px; padding: 10px; }
+
+            .btn span { display: none; }
+
+            .btn { min-width: 40px; }
+
+        }
+
+    </style>
+
+</head>
+
+<body class="light">
+
+<div class="toolbar">
+
+    <div class="file-status">
+
+        <span><i class="fas fa-file-code"></i> <b id="display-name">Untitled.txt</b></span>
+
+        <span id="char-count">0 Chars</span>
+
+    </div>
+
+    
+
+    <button class="btn" onclick="openModal()"><i class="fas fa-download"></i> <span>Export</span></button>
+
+    <button class="btn" onclick="document.getElementById('fileInput').click()"><i class="fas fa-upload"></i> <span>Upload</span></button>
+
+    <button class="btn" onclick="togglePreview()"><i class="fas fa-eye"></i> <span>Preview</span></button>
+
+    <button class="btn" onclick="toggleTheme()"><i class="fas fa-moon"></i> <span>Theme</span></button>
+
+    
+
+    <input type="file" id="fileInput" hidden onchange="handleUpload(event)">
+
+    <button class="btn btn-exit" onclick="exitEditor()"><i class="fas fa-times"></i></button>
+
+</div>
+
+<div class="main-container" id="editor-view">
+
+    <div id="line-numbers">1</div>
+
+    <div class="editor-holder">
+
+        <textarea id="editing" spellcheck="false" oninput="handleInput()" onscroll="handleScroll()"></textarea>
+
+        <pre id="highlighting"><code id="code-content"></code></pre>
+
+    </div>
+
+</div>
+
+<iframe id="preview-frame"></iframe>
+
+<div class="overlay" id="overlay" onclick="closeModal()"></div>
+
+<div class="modal" id="modal">
+
+    <h3>Save Project</h3>
+
+    <input type="text" id="filename" placeholder="File name..." style="width:100%; padding:10px; margin:10px 0;">
+
+    <select id="ext" style="width:100%; padding:10px; margin:10px 0;">
+
+        <option value="html">HTML</option>
+
+        <option value="css">CSS</option>
+
+        <option value="js">JS</option>
+
+    </select>
+
+    <button class="btn" style="width: 100%;" onclick="download()">Download Now</button>
+
+</div>
+
+<script>
+
+    const editing = document.getElementById('editing');
+
+    const highlighting = document.getElementById('code-content');
+
+    const lineNumbers = document.getElementById('line-numbers');
+
+    const displayName = document.getElementById('display-name');
+
+    function handleInput() {
+
+        let text = editing.value;
+
+        
+
+        // تم إزالة أكواد الـ Regex الخاصة بالألوان
+
+        // نقوم فقط بتحويل الرموز الخاصة للعرض بشكل صحيح
+
+        let safe = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+        highlighting.innerHTML = safe + (text.endsWith('\n') ? "\n " : "");
+
+        
+
+        const lines = text.split('\n').length;
+
+        lineNumbers.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('<br>');
+
+        
+
+        document.getElementById('char-count').innerText = text.length + " Chars";
+
+        handleScroll();
+
+    }
+
+    function handleScroll() {
+
+        const high = document.getElementById('highlighting');
+
+        high.scrollTop = editing.scrollTop;
+
+        high.scrollLeft = editing.scrollLeft;
+
+        lineNumbers.scrollTop = editing.scrollTop;
+
+    }
+
+    function handleUpload(event) {
+
+        const file = event.target.files[0];
+
+        if (file) {
+
+            displayName.innerText = file.name;
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => { editing.value = e.target.result; handleInput(); };
+
+            reader.readAsText(file);
+
+        }
+
+    }
+
+    function toggleTheme() {
+
+        document.body.classList.toggle('dark');
+
+        document.body.classList.toggle('light');
+
+    }
+
+    function openModal() {
+
+        document.getElementById('modal').style.display='block';
+
+        document.getElementById('overlay').style.display='block';
+
+    }
+
+    function closeModal() {
+
+        document.getElementById('modal').style.display='none';
+
+        document.getElementById('overlay').style.display='none';
+
+    }
+
+    function download() {
+
+        const name = document.getElementById('filename').value || "index";
+
+        const ext = document.getElementById('ext').value;
+
+        const blob = new Blob([editing.value], {type: 'text/plain'});
+
+        const a = document.createElement("a");
+
+        a.href = URL.createObjectURL(blob);
+
+        a.download = `${name}.${ext}`;
+
+        a.click();
+
+        displayName.innerText = `${name}.${ext}`;
+
+        closeModal();
+
+    }
+
+    function togglePreview() {
+
+        const frame = document.getElementById('preview-frame');
+
+        const view = document.getElementById('editor-view');
+
+        if(frame.style.display === 'none' || frame.style.display === '') {
+
+            frame.style.display = 'block'; view.style.display = 'none';
+
+            frame.srcdoc = editing.value;
+
+        } else {
+
+            frame.style.display = 'none'; view.style.display = 'flex';
+
+        }
+
+    }
+
+    function exitEditor() { if(confirm("Exit and lose changes?")) window.close(); }
+
+    editing.addEventListener('scroll', handleScroll);
+
+</script>
+<script src="App.js" type="text/javascript" charset="utf-8"></script>
+</body>
+
+</html>
+

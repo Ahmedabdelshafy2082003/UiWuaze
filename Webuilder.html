@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ui-Wuaze Studio | Advanced Engineering Engine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+   <link rel="stylesheet" href="Webuilder.css" type="text/css" media="all" />
+    <link rel="manifest" href="/manifest.json">
+</head>
+<body>
+
+<div id="app" data-scope="application-root">
+    
+<header id="top-bar" role="banner">
+    <div class="brand" style="display: flex; align-items: center; gap: 15px;">
+        <button class="btn-toggle" onclick="toggleSidebar('sidebar-left')" aria-label="Toggle Registry">
+            <i class="fas fa-th-large"></i>
+        </button>
+        
+        <div class="logo-icon">STUDIO</div>
+        <div style="font-weight: 700;">Ui-Wuaze <span style="color:var(--accent)">PRO</span></div>
+    </div>
+    
+    <nav class="toolbar-actions" style="display: flex; align-items: center; gap: 10px;">
+        <input type="file" id="importProject" style="display:none" accept=".json">
+        
+        <button class="btn" id="action-load"><i class="fas fa-upload"></i> Load</button>
+        <button class="btn" id="action-save"><i class="fas fa-save"></i> Save</button>
+        <button class="btn" id="action-export"><i class="fas fa-file-export"></i> Export HTML</button>
+
+        <button class="btn-toggle" onclick="toggleSidebar('properties-panel')" aria-label="Toggle Properties">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+    </nav>
+</header>
+
+    <main id="main" data-scope="viewport">
+<aside id="sidebar-left" class="sidebar">
+
+            <div class="sidebar-content">
+                <section>
+                    <h4 style="font-size: 11px; color: var(--text-dim);">COMPONENT REGISTRY</h4>
+                    <div class="lib-grid" id="component-palette" role="list">
+                        <div class="lib-item" data-type="title" role="button"><i class="fas fa-heading"></i>Title</div>
+                        <div class="lib-item" data-type="text" role="button"><i class="fas fa-font"></i>Text</div>
+                        <div class="lib-item" data-type="button" role="button"><i class="fas fa-square"></i>Button</div>
+                        <div class="lib-item" data-type="card" role="button"><i class="fas fa-id-card"></i>Card</div>
+                        <div class="lib-item" data-type="input" role="button"><i class="fas fa-keyboard"></i>Input</div>
+                        <div class="lib-item" data-type="header" role="button"><i class="fas fa-window-maximize"></i>Header</div>
+                        <div class="lib-item" data-type="image" role="button"><i class="fas fa-image"></i>Image</div>
+                        <div class="lib-item" data-type="colorbox" role="button"><i class="fas fa-fill-drip"></i>Box</div>
+                    </div>
+                </section>
+                
+                <section style="margin-top:30px;">
+                    <h4 style="font-size: 11px; color: var(--text-dim);">DOM LAYER HIERARCHY</h4>
+                    <div id="layer-list" role="tree"></div>
+                </section>
+            </div>
+        </aside>
+
+        <section id="canvas-area" data-scope="rendering-surface">
+            <div id="canvas" data-canvas-active="true" role="region" aria-label="Visual Editor">
+                </div>
+        </section>
+
+<aside id="properties-panel" class="sidebar">
+
+            <div class="sidebar-content" id="property-inspector-mount">
+                <h4 style="font-size: 11px; color: var(--text-dim);">PROPERTY INSPECTOR</h4>
+                
+                <div id="no-selection-msg" style="text-align:center; padding:40px; color:var(--text-dim);">
+                    <i class="fas fa-mouse-pointer" style="font-size:24px; opacity:0.2"></i><br>Select an element
+                </div>
+
+                <form id="element-controls" style="display:none;" onsubmit="return false;">
+                    <fieldset class="prop-group">
+                        <legend>Style & Color</legend>
+                        <label>Text Color</label>
+                        <input type="color" id="elColor">
+                        <label style="margin-top:10px">Background</label>
+                        <input type="color" id="elBg">
+                    </fieldset>
+                    <fieldset class="prop-group">
+                        <legend>Geometry</legend>
+                        <label>Border Radius</label>
+                        <input type="range" id="elRadius" min="0" max="50">
+                        <label>Font Size</label>
+                        <input type="range" id="elFontSize" min="8" max="100">
+                    </fieldset>
+                    <div style="display:flex; gap:10px">
+                        <button class="btn" style="flex:1; background:#333" id="btn-duplicate"><i class="fas fa-copy"></i></button>
+                        <button class="btn" style="flex:2; background:var(--danger)" id="btn-delete"><i class="fas fa-trash"></i> Delete</button>
+                    </div>
+                </form>
+            </div>
+        </aside>
+    </main>
+</div>
+
+<div id="saveModal" class="custom-modal">
+    <div class="modal-content">
+        <h3>Save Project Configuration</h3>
+        <input type="text" id="fileNameInput" placeholder="Enter Project Name..." class="modal-input">
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="closeSaveModal()" class="btn" style="background:#444; flex:1">Cancel</button>
+            <button id="confirmSaveBtn" class="btn" style="flex:1">Save Data</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" charset="utf-8">
+/**/**
+ * Global Sidebar Toggle
+ * @param {string} id - The ID of the element to show/hide
+ */
+function toggleSidebar(id) {
+    const el = document.getElementById(id);
+    
+    // Check if it's currently hidden
+    if (el.classList.contains('collapsed')) {
+        el.classList.remove('collapsed');
+        el.style.display = 'flex'; // Restore layout
+    } else {
+        el.classList.add('collapsed');
+        // We set display to none after the animation finishes if needed, 
+        // but for now, the class handles the width = 0
+    }
+}
+
+</script>
+<script src="App.js" type="text/javascript"></script>
+<script src="Webuilder.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>
