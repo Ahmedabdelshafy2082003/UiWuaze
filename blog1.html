@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقارنة التصميم الأولي والنهائي للموقع</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background-color: #111;
+            color: #fff;
+        }
+
+        /* حاوية المقارنة الرئيسية */
+        .comparison-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* التصميم المشترك للـ iFrames */
+        .iframe-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            /* لمنع الـ iframe من التقاط الماوس أثناء السحب */
+            pointer-events: auto; 
+        }
+
+        /* التصميم القديم (يكون في الخلفية بالكامل) */
+        .design-old {
+            background: #222;
+        }
+
+        /* التصميم الجديد (يكون في الأعلى ويتم قصه بناءً على حركة السلايدر) */
+        .design-new {
+            background: #333;
+            /* يبدأ من منتصف الشاشة 50% */
+            clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+            transition: clip-path 0.1s ease-out;
+        }
+
+        /* خط السحاب المنزلق (Slider Handle) */
+        .slider-handle {
+            position: absolute;
+            top: 0;
+            left: 50%; /* يبدأ من المنتصف */
+            width: 4px;
+            height: 100%;
+            background-color: #00ffcc; /* لون النيون */
+            box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+            cursor: ew-resize;
+            transform: translateX(-50%);
+            z-index: 10;
+            transition: left 0.1s ease-out;
+        }
+
+        /* الدائرة التفاعلية في منتصف الخط */
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: #111;
+            border: 3px solid #00ffcc;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+            font-weight: bold;
+            font-size: 18px;
+            user-select: none;
+            color: #00ffcc;
+        }
+
+        /* شارات توضيحية أعلى الشاشة */
+        .badge {
+            position: absolute;
+            top: 20px;
+            padding: 8px 16px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 5;
+            letter-spacing: 1px;
+            pointer-events: none; /* لا تتداخل مع الماوس */
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .badge-old { right: 20px; color: #ff4a4a; border-color: #ff4a4a; }
+        .badge-new { left: 20px; color: #00ffcc; border-color: #00ffcc; }
+    </style>
+</head>
+<body>
+
+    <div class="comparison-container" id="container">
+        
+        <div class="badge badge-new">التصميم الجديد الحاضر 🚀</div>
+        <div class="badge badge-old">التصميم الأولي الماضي 🕰️</div>
+
+        <div class="iframe-wrapper design-old">
+            <iframe src="item/index.html" title="Old Design"></iframe>
+        </div>
+
+        <div class="iframe-wrapper design-new" id="newDesignWrapper">
+            <iframe src="item/index2.html" title="New Design"></iframe>
+        </div>
+
+        <div class="slider-handle" id="handle">
+            <div class="slider-button">↔</div>
+        </div>
+
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const handle = document.getElementById('handle');
+        const newDesignWrapper = document.getElementById('newDesignWrapper');
+
+        let isDragging = false;
+
+        // دالة تحريك السحاب بناءً على مكان الماوس أو اللمس
+        function moveSlider(xPosition) {
+            // حساب النسبة المئوية لموقع الماوس بالنسبة لعرض الشاشة
+            const containerWidth = container.offsetWidth;
+            let percentage = (xPosition / containerWidth) * 100;
+
+            // تحديد حدود الحركة (حتى لا يخرج السحاب خارج الشاشة)
+            if (percentage < 0) percentage = 0;
+            if (percentage > 100) percentage = 100;
+
+            // تطبيق التحريك على خط السحاب
+            handle.style.left = `${percentage}%`;
+            
+            // تطبيق التحريك على الـ clip-path الخاص بالـ iframe العلوي
+            // بما أن الـ document باتجاه RTL (من اليمين لليسار)، فإن نسبة الـ clip-path تعكس لتتناسب مع السحب
+            newDesignWrapper.style.clipPath = `polygon(0 0, ${percentage}% 0, ${percentage}% 100%, 0 100%)`;
+        }
+
+        // أحداث الماوس (للكمبيوتر)
+        handle.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mouseup', () => isDragging = false);
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            moveSlider(e.clientX);
+        });
+
+        // أحداث اللمس (للهواتف والتابلت)
+        handle.addEventListener('touchstart', () => isDragging = true);
+        window.addEventListener('touchend', () => isDragging = false);
+        window.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            // التقاط إحداثيات الإصبع الأول
+            moveSlider(e.touches[0].clientX);
+        });
+    </script>
+</body>
+</html>

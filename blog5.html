@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نمط المخطط الهندسي والواجهة الحية - Blueprint Overlay</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0b1426; /* أزرق داكن هندسي */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* حاوية العرض الرئيسية */
+        .blueprint-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* التصميم المشترك للطبقات */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 1. الطبقة السفلية: الموقع القديم (يتم تحويله برمجياً لشكل Blueprint) */
+        .layer-blueprint {
+            z-index: 1;
+            /* فلتر CSS متطور لتحويل الموقع بالكامل للون الأزرق الأحادي والخطوط الحادة كالمخططات */
+            filter: contrast(140%) hue-rotate(190deg) saturate(150%) brightness(90%);
+            background-color: #0b1426;
+            
+            /* إضافة شبكة مربعات رسم هندسي بالخلفية */
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        /* 2. الطبقة العلوية: الموقع الجديد (تتغير شفافيته عبر الـ Slider) */
+        .layer-visual {
+            z-index: 2;
+            opacity: 0.5; /* يبدأ من النصف الافتراضي */
+            transition: opacity 0.05s linear;
+            pointer-events: auto; /* للحفاظ على تفاعلية عناصر الموقع الجديد */
+        }
+
+        /* عندما تكون الشفافية منخفضة جداً، نلغي الأحداث للموقع العلوي لكي يتمكن المستخدم من الضغط على عناصر المخطط السفلي */
+        .low-opacity {
+            pointer-events: none;
+        }
+
+        /* 3. لوحة التحكم السفلية (لوحة المهندس) */
+        .engineer-panel {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(11, 20, 38, 0.9);
+            border: 2px solid #00a8ff;
+            box-shadow: 0 0 20px rgba(0, 168, 255, 0.3);
+            padding: 15px 30px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            backdrop-filter: blur(10px);
+            width: 90%;
+            max-width: 550px;
+        }
+
+        .panel-label {
+            color: #00a8ff;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+            letter-spacing: 1px;
+        }
+
+        /* تخصيص شريط السحب (Slider) */
+        .opacity-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #1d3557;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        /* مقبض السلايدر */
+        .opacity-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #00a8ff;
+            cursor: pointer;
+            box-shadow: 0 0 10px #00a8ff;
+            transition: transform 0.1s ease;
+        }
+
+        .opacity-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .percentage-display {
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            min-width: 45px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        /* شارات تلميح علوية للزوايا (تأثير رادار أو كاميرا هندسية) */
+        .corner-line {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #00a8ff;
+            z-index: 5;
+            pointer-events: none;
+        }
+        .top-left { top: 20px; left: 20px; border-right: none; border-bottom: none; }
+        .top-right { top: 20px; right: 20px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: 20px; left: 20px; border-right: none; border-top: none; }
+        .bottom-right { bottom: 20px; right: 20px; border-left: none; border-top: none; }
+    </style>
+</head>
+<body>
+
+    <div class="blueprint-container">
+        
+        <div class="corner-line top-left"></div>
+        <div class="corner-line top-right"></div>
+        <div class="corner-line bottom-left"></div>
+        <div class="corner-line bottom-right"></div>
+
+        <div class="layer layer-blueprint">
+            <iframe src="item/index.html" title="Blueprint Wireframe"></iframe>
+        </div>
+
+        <div class="layer layer-visual" id="visualLayer">
+            <iframe src="item/index2.html" title="Final Live Interface"></iframe>
+        </div>
+
+        <div class="engineer-panel">
+            <span class="panel-label">🛠️ هيكل المخطط</span>
+            
+            <input type="range" min="0" max="100" value="50" class="opacity-slider" id="opacityRange">
+            
+            <span class="panel-label">واجهة حية ✨</span>
+            <div class="percentage-display" id="pctNum">50%</div>
+        </div>
+
+    </div>
+
+    <script>
+        const opacityRange = document.getElementById('opacityRange');
+        const visualLayer = document.getElementById('visualLayer');
+        const pctNum = document.getElementById('pctNum');
+
+        // الاستماع لحركة شريط التحكم وتغيير الشفافية ديناميكياً
+        opacityRange.addEventListener('input', (e) => {
+            const val = e.target.value;
+            
+            // 1. تحديث رقم النسبة المئوية المكتوب
+            pctNum.innerText = val + '%';
+            
+            // 2. تحديث درجة شفافية طبقة الموقع الجديد (تحويل الرقم من 0-100 إلى 0-1)
+            const opacityDecimal = val / 100;
+            visualLayer.style.opacity = opacityDecimal;
+
+            // 3. ذكاء اصطناعي تفاعلي لتسهيل تصفح الموقع بالأسفل:
+            // إذا قلّت الشفافية عن 15%، نقوم بتعطيل الماوس للطبقة العليا لكي يتمكن الزائر من الضغط والتمرير بداخل المخطط القديم السفلي بسلاسة.
+            if(opacityDecimal < 0.15) {
+                visualLayer.classList.add('low-opacity');
+            } else {
+                visualLayer.classList.remove('low-opacity');
+            }
+        });
+    </script>
+</body>
+</html>

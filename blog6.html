@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غرفة التحكم - التبديل بين الشاشات</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #080a0f; /* لون غامق لغرفة التحكم */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #fff;
+        }
+
+        /* الخلفية المحيطة كأنها استوديو عمل */
+        .workspace {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle at center, #111625 0%, #07090e 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 1. الشاشة الرئيسية الكبرى */
+        .main-monitor {
+            position: relative;
+            width: 90%;
+            height: 85%;
+            background: #151a26;
+            border: 12px solid #222831; /* إطار الشاشة */
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(0, 168, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        /* قاعدة الشاشة الرئيسية (لإعطاء إيحاء الـ 3D لشاشة الكمبيوتر) */
+        .monitor-stand {
+            position: absolute;
+            bottom: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 140px;
+            height: 4%;
+            background: #2d3436;
+            border-radius: 5px 5px 0 0;
+            z-index: 1;
+        }
+
+        /* 2. الشاشة الصغيرة العائمة (PiP / Tablet) */
+        .pip-screen {
+            position: absolute;
+            bottom: 60px;
+            left: 60px; /* تطفو في الزاوية اليسرى السفلى */
+            width: 320px;
+            height: 200px;
+            background: #111;
+            border: 6px solid #2d3436; /* إطار التابلت */
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px rgba(255, 74, 74, 0.1);
+            z-index: 10;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* تأثير ارتداد أنيق */
+        }
+
+        /* عناوين الشاشات الصغيرة */
+        .screen-label {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            z-index: 5;
+            pointer-events: none;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .main-monitor .screen-label { color: #00ffcc; border-color: #00ffcc; }
+        .pip-screen .screen-label { color: #ff4a4a; border-color: #ff4a4a; }
+
+        /* أسلوب الـ iFrames الداخلي */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        /* 3. زر التبديل السحري (SWAP BUTTON) */
+        .control-hub {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
+        }
+
+        .swap-btn {
+            background: #222831;
+            color: #00a8ff;
+            border: 2px solid #00a8ff;
+            padding: 12px 28px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 30px;
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .swap-btn:hover {
+            background: #00a8ff;
+            color: #fff;
+            box-shadow: 0 0 25px rgba(0, 168, 255, 0.6);
+            transform: scale(1.05);
+        }
+
+        .swap-btn span {
+            font-size: 18px;
+        }
+
+        /* تأثير الوميض والتشويش الخفيف أثناء التبديل (طابع الآلات) */
+        @keyframes monitor-flash {
+            0% { opacity: 0.3; filter: brightness(3); }
+            50% { opacity: 0.8; filter: scale(0.99); }
+            100% { opacity: 1; filter: brightness(1); }
+        }
+
+        .flicker-effect {
+            animation: monitor-flash 0.4s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="workspace">
+        
+        <div class="control-hub">
+            <button class="swap-btn" id="swapBtn">
+                <span>🔄</span> تبديل الشاشات (SWAP)
+            </button>
+        </div>
+
+        <div class="main-monitor" id="mainMonitor">
+            <div class="screen-label" id="mainLabel">الشاشة الرئيسية: التصميم النهائي الحاضر 🚀</div>
+            <iframe src="item/index2.html" id="mainIframe" title="Main Monitor View"></iframe>
+        </div>
+
+        <div class="pip-screen" id="pipScreen">
+            <div class="screen-label" id="pipLabel">التابلت الجانبي: التصميم الأولي الماضي 🕰️</div>
+            <iframe src="item/index.html" id="pipIframe" title="PiP Screen View"></iframe>
+        </div>
+
+        <div class="monitor-stand"></div>
+
+    </div>
+
+    <script>
+        const swapBtn = document.getElementById('swapBtn');
+        const mainIframe = document.getElementById('mainIframe');
+        const pipIframe = document.getElementById('pipIframe');
+        const mainLabel = document.getElementById('mainLabel');
+        const pipLabel = document.getElementById('pipLabel');
+        
+        const mainMonitor = document.getElementById('mainMonitor');
+        const pipScreen = document.getElementById('pipScreen');
+
+        // الروابط الافتراضية المحفوظة لديك
+        const oldDesignSrc = "item/index.html";
+        const newDesignSrc = "item/index2.html";
+
+        // متغير لمتابعة الحالة الحالية (هل الجديد في الشاشة الكبيرة؟)
+        let isNewOnMain = true;
+
+        swapBtn.addEventListener('click', () => {
+            // 1. إضافة تأثير الوميض التفاعلي لكلا الشاشتين للإيحاء بالتبديل الإلكتروني
+            mainMonitor.classList.add('flicker-effect');
+            pipScreen.classList.add('flicker-effect');
+
+            // إزالة الكلاس بعد انتهاء الأنميشن ليكون جاهزاً للضغطات التالية
+            setTimeout(() => {
+                mainMonitor.classList.remove('flicker-effect');
+                pipScreen.classList.remove('flicker-effect');
+            }, 400);
+
+            // 2. تدوير وتبديل الروابط والـ Labels بناءً على الحالة
+            if (isNewOnMain) {
+                // نقل القديم للشاشة الكبيرة والجديد للتابلت الصغير
+                mainIframe.src = oldDesignSrc;
+                pipIframe.src = newDesignSrc;
+
+                mainLabel.innerHTML = "الشاشة الرئيسية: التصميم الأولي الماضي 🕰️";
+                mainLabel.style.color = "#ff4a4a";
+                mainLabel.style.borderColor = "#ff4a4a";
+
+                pipLabel.innerHTML = "التابلت الجانبي: التصميم النهائي الحاضر 🚀";
+                pipLabel.style.color = "#00ffcc";
+                pipLabel.style.borderColor = "#00ffcc";
+                
+                mainMonitor.style.borderColor = "#3a2222"; // تغيير طفيف بلون الإطار ليتماشى مع الماضي
+                isNewOnMain = false;
+            } else {
+                // إعادة الوضع الافتراضي (الجديد في الكبيرة والقديم في الصغيرة)
+                mainIframe.src = newDesignSrc;
+                pipIframe.src = oldDesignSrc;
+
+                mainLabel.innerHTML = "الشاشة الرئيسية: التصميم النهائي الحاضر 🚀";
+                mainLabel.style.color = "#00ffcc";
+                mainLabel.style.borderColor = "#00ffcc";
+
+                pipLabel.innerHTML = "التابلت الجانبي: التصميم الأولي الماضي 🕰️";
+                pipLabel.style.color = "#ff4a4a";
+                pipLabel.style.borderColor = "#ff4a4a";
+
+                mainMonitor.style.borderColor = "#222831";
+                isNewOnMain = true;
+            }
+        });
+    </script>
+</body>
+</html>

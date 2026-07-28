@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التمرير المتزامن جنباً إلى جنب - Synchronized Scroll</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #0f111a;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* شريط العنوان العلوي */
+        .header-bar {
+            height: 60px;
+            background: #161925;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 2px solid #23283d;
+            z-index: 10;
+            position: relative;
+        }
+
+        .header-title {
+            font-size: 14px;
+            color: #8f9bb3;
+            font-weight: 600;
+        }
+        .header-title span { color: #00ffcc; }
+
+        /* حاوية التقسيم الرئيسية (نصفين) */
+        .split-container {
+            display: flex;
+            width: 100vw;
+            height: calc(100vh - 60px); /* المساحة المتبقية تحت الهيدر */
+            position: relative;
+        }
+
+        /* تصميم النصف الواحد */
+        .split-pane {
+            flex: 1;
+            height: 100%;
+            overflow-y: scroll; /* تفعيل التمرير العمودي */
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* إخفاء أشرطة التمرير الافتراضية للمتصفح لمنح مظهر جمالي ونظيف */
+        .split-pane::-webkit-scrollbar {
+            width: 6px;
+        }
+        .split-pane::-webkit-scrollbar-track {
+            background: #10121d;
+        }
+        .split-pane::-webkit-scrollbar-thumb {
+            background: #23283d;
+            border-radius: 3px;
+        }
+        .split-pane::-webkit-scrollbar-thumb:hover {
+            background: #00ffcc;
+        }
+
+        /* خط الفصل الوسطي المضيء */
+        .split-divider {
+            width: 2px;
+            height: 100%;
+            background: #23283d;
+            position: relative;
+            z-index: 5;
+            box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+        }
+
+        /* الـ iFrames المدمجة داخل الحاويات المتمررة */
+        .iframe-holder {
+            width: 100%;
+            height: 4000px; /* طول افتراضي كبير جداً ليسمح لصفحتك بعمل سكرول خارجي متزامن */
+            position: relative;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* شارات التمييز الثابتة في زوايا الشاشات */
+        .pane-badge {
+            position: fixed;
+            top: 75px;
+            padding: 6px 14px;
+            background: rgba(16, 18, 29, 0.9);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 8;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .badge-old { right: 20px; color: #ff4a4a; border-color: #ff4a4a; }
+        .badge-new { left: 20px; color: #00ffcc; border-color: #00ffcc; }
+    </style>
+</head>
+<body>
+
+    <div class="header-bar">
+        <div class="header-title">📜 وضع المقارنة المتزامنة: <span>حرك التمرير (Scroll) في أي جانب ليتحرك الجانب الآخر تلقائياً</span></div>
+    </div>
+
+    <div class="pane-badge badge-old">التصميم الأولي الماضي 🕰️</div>
+    <div class="pane-badge badge-new">التصميم النهائي الحاضر 🚀</div>
+
+    <div class="split-container">
+        
+        <div class="split-pane" id="paneOld">
+            <div class="iframe-holder">
+                <iframe src="item/index.html" title="Old Design View"></iframe>
+            </div>
+        </div>
+
+        <div class="split-divider"></div>
+
+        <div class="split-pane" id="paneNew">
+            <div class="iframe-holder">
+                <iframe src="item/index2.html" title="New Design View"></iframe>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const paneOld = document.getElementById('paneOld');
+        const paneNew = document.getElementById('paneNew');
+
+        // متغيرات لمنع حدوث حلقة تمرير لانهائية (Infinite Loop) بين الطرفين
+        let isScrollingOld = false;
+        let isScrollingNew = false;
+
+        // 1. ربط تمرير الطرف الأيمن (القديم) بالطرف الأيسر (الجديد)
+        paneOld.addEventListener('scroll', () => {
+            if (isScrollingNew) return; // إذا كان الطرف الآخر هو المستدعي، لا تفعل شيء لتجنب اللوب
+            
+            isScrollingOld = true;
+            // جعل قيمة الـ ScrollTop في الجديد تطابق القديم تماماً بالبكسل
+            paneNew.scrollTop = paneOld.scrollTop; 
+            
+            // إعادة تعيين المتغير بعد انتهاء الحركة الخاطفة
+            setTimeout(() => { isScrollingOld = false; }, 10);
+        });
+
+        // 2. ربط تمرير الطرف الأيسر (الجديد) بالطرف الأيمن (القديم)
+        paneNew.addEventListener('scroll', () => {
+            if (isScrollingOld) return; // إذا كان الطرف الآخر هو المستدعي، لا تفعل شيء لتجنب اللوب
+            
+            isScrollingNew = true;
+            // جعل قيمة الـ ScrollTop في القديم تطابق الجديد تماماً بالبكسل
+            paneOld.scrollTop = paneNew.scrollTop; 
+            
+            // إعادة تعيين المتغير بعد انتهاء الحركة الخاطفة
+            setTimeout(() => { isScrollingNew = false; }, 10);
+        });
+    </script>
+</body>
+</html>

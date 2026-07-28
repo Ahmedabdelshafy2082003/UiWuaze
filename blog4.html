@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>وضع المطور - إحصائيات الأداء والتصميم</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Consolas', 'Segoe UI', monospace;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* 1. الجانب الأيمن: لوحة إحصائيات المطور */
+        .dev-panel {
+            width: 350px;
+            background-color: #161b22;
+            border-left: 1px solid #30363d;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 10;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+        }
+
+        .panel-header h2 {
+            font-size: 18px;
+            color: #58a6ff;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-header p {
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 25px;
+        }
+
+        /* أزرار التبديل */
+        .toggle-container {
+            display: flex;
+            background: #0d1117;
+            padding: 5px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            margin-bottom: 30px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #8b949e;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn.active {
+            background: #21262d;
+            color: #f0f6fc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .toggle-btn.active.old-btn { color: #f25f5c; border-bottom: 2px solid #f25f5c; }
+        .toggle-btn.active.new-btn { color: #57cc99; border-bottom: 2px solid #57cc99; }
+
+        /* منطقة العدادات والإحصائيات */
+        .metrics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        .metric-card {
+            background: #0d1117;
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #8b949e;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #f0f6fc;
+            transition: color 0.3s ease;
+        }
+
+        /* شريط التقدم الرسومي */
+        .progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background: #21262d;
+            border-radius: 3px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%; /* يتحكم به الـ JS */
+            background: #58a6ff;
+            border-radius: 3px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+        }
+
+        .panel-footer {
+            font-size: 11px;
+            color: #484f58;
+            text-align: center;
+            border-top: 1px solid #30363d;
+            padding-top: 15px;
+        }
+
+        /* 2. الجانب الأيسر: حاوية الـ iFrames للموقع */
+        .view-panel {
+            flex-grow: 1;
+            position: relative;
+            background: #010409;
+        }
+
+        .iframe-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .iframe-wrapper.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dev-panel">
+        <div class="panel-inner">
+            <div class="panel-header">
+                <h2><span>⚡</span> Developer Mode</h2>
+                <p>مقارنة حية لكفاءة الأكواد وسرعة الواجهات</p>
+            </div>
+
+            <div class="toggle-container">
+                <button class="toggle-btn old-btn active" onclick="switchView('old')">التصميم الأولي</button>
+                <button class="toggle-btn new-btn" onclick="switchView('new')">التصميم الجديد</button>
+            </div>
+
+            <div class="metrics-list">
+                
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <span>سرعة التحميل (Load Time)</span>
+                        <span id="label-speed">2.4s</span>
+                    </div>
+                    <div class="metric-value" id="val-speed">2.4s</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="bar-speed" style="background-color: #f25f5c;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <span>حجم أصول الصفحة (Bundle Size)</span>
+                        <span id="label-size">4.2 MB</span>
+                    </div>
+                    <div class="metric-value" id="val-size">4.2 MB</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="bar-size" style="background-color: #f25f5c;"></div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label">
+                        <span>مؤشر الأداء (Lighthouse Core)</span>
+                        <span id="label-performance">48%</span>
+                    </div>
+                    <div class="metric-value" id="val-performance">48%</div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="bar-performance" style="background-color: #f25f5c;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="panel-footer">
+            Console: Metrics updated successfully.
+        </div>
+    </div>
+
+    <div class="view-panel">
+        <div class="iframe-wrapper active" id="view-old">
+            <iframe src="item/index.html" title="Old Design Prototype"></iframe>
+        </div>
+
+        <div class="iframe-wrapper" id="view-new">
+            <iframe src="item/index2.html" title="New Design Final"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // تعريف بيانات الإحصائيات لكل موقع (يمكنك تعديل الأرقام لتناسب موقعك الفعلي)
+        const metricsData = {
+            old: {
+                speed: { text: "2.4 ثانية", pct: 40, color: "#f25f5c" },  // أحمر لضعف الأداء
+                size: { text: "4.2 ميجابايت", pct: 85, color: "#f25f5c" }, 
+                performance: { text: "48 / 100", pct: 48, color: "#f25f5c" }
+            },
+            new: {
+                speed: { text: "0.6 ثانية 🚀", pct: 95, color: "#57cc99" }, // أخضر للأداء العالي
+                size: { text: "850 كيلوبايت ✨", pct: 15, color: "#57cc99" },
+                performance: { text: "98 / 100 🏆", pct: 98, color: "#57cc99" }
+            }
+        };
+
+        // دالة التبديل التفاعلية
+        function switchView(mode) {
+            // 1. تحديث شكل الأزرار (Active State)
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            if(mode === 'old') {
+                document.querySelector('.old-btn').classList.add('active');
+                document.getElementById('view-old').classList.add('active');
+                document.getElementById('view-new').classList.remove('active');
+            } else {
+                document.querySelector('.new-btn').classList.add('active');
+                document.getElementById('view-new').classList.add('active');
+                document.getElementById('view-old').classList.remove('active');
+            }
+
+            // 2. تحديث الأرقام والرسوم البيانية بناءً على الوضع المختار بنعومة
+            const data = metricsData[mode];
+
+            // تحديث السرعة
+            document.getElementById('val-speed').innerText = data.speed.text;
+            document.getElementById('bar-speed').style.width = data.speed.pct + '%';
+            document.getElementById('bar-speed').style.backgroundColor = data.speed.color;
+
+            // تحديث الحجم
+            document.getElementById('val-size').innerText = data.size.text;
+            document.getElementById('bar-size').style.width = data.size.pct + '%';
+            document.getElementById('bar-size').style.backgroundColor = data.size.color;
+
+            // تحديث التقييم الإجمالي
+            document.getElementById('val-performance').innerText = data.performance.text;
+            document.getElementById('bar-performance').style.width = data.performance.pct + '%';
+            document.getElementById('bar-performance').style.backgroundColor = data.performance.color;
+        }
+
+        // تشغيل العدادات لأول مرة عند تحميل الصفحة لتظهر حركة الأنميشن فوراً
+        window.onload = () => {
+            switchView('old');
+        };
+    </script>
+</body>
+</html>

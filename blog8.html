@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بطاقات الأوريغامي ثلاثية الأبعاد - Origami Flip Cards</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* شريط العنوان */
+        .title-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .title-section h1 {
+            font-size: 24px;
+            color: #66fcf1;
+            margin-bottom: 8px;
+        }
+
+        .title-section p {
+            font-size: 14px;
+            color: #c5a059;
+        }
+
+        /* شبكة البطاقات (Grid) */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(45%, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr; /* بطاقة واحدة في الصف للشاشات الصغيرة */
+            }
+        }
+
+        /* حاوية الأبعاد الثلاثية للبطاقة */
+        .card-container {
+            background-color: transparent;
+            height: 380px;
+            perspective: 1500px; /* يعطي عمقاً للتأثير ثلاثي الأبعاد */
+            cursor: pointer;
+        }
+
+        /* الجسم الداخلي للبطاقة الذي يلتف فعلياً */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d; /* الحفاظ على العناصر ثلاثية الأبعاد بالداخل */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            border-radius: 12px;
+        }
+
+        /* كلاس التفعيل عند الضغط (الدوران 180 درجة) */
+        .card-container.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* التصميم المشترك للوجهين الأمامي والخلفي */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; /* إخفاء الوجه الخلفي أثناء الدوران */
+            backface-visibility: hidden;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #1f2833;
+        }
+
+        /* الوجه الأمامي (التصميم الجديد - الافتراضي) */
+        .card-front {
+            background-color: #1f2833;
+            color: white;
+            border-color: #66fcf1; /* توهج نيون أخضر للجديد */
+        }
+
+        /* الوجه الخلفي (التصميم القديم - يظهر بعد الالتفاف) */
+        .card-back {
+            background-color: #1a1a1a;
+            color: white;
+            transform: rotateY(180deg); /* تدويره مسبقاً ليكون في الخلف */
+            border-color: #ff4a4a; /* توهج أحمر للقديم */
+        }
+
+        /* الأطر الداخلية للـ iFrames */
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+            transition: opacity 0.3s ease;
+        }
+
+        /* التطبيق الحاسم للنصيحة التقنية: تعطيل الأحداث أثناء حركة الدوران */
+        .card-inner.is-flipping iframe {
+            pointer-events: none !important;
+        }
+
+        /* شارات العناوين الثابتة فوق البطاقات */
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            z-index: 10;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .card-front .card-badge { background: #66fcf1; color: #0b0c10; }
+        .card-back .card-badge { background: #ff4a4a; color: #fff; }
+
+        /* عنوان القسم أسفل البطاقة داخلياً */
+        .section-tag {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9) 70%);
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            z-index: 9;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-section">
+        <h1>📦 ألبوم التحول الهيكلي للموقع</h1>
+        <p>اضغط على أي بطاقة لقلبها واستكشاف الفارق بين التصميم الأولي (الخلف) والنهائي (الأمام)</p>
+    </div>
+
+    <div class="cards-grid">
+        
+        <div class="card-container" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-badge">الحاضر v2.0 🚀</span>
+                    <div class="section-tag">قسـم الترحيب والهيكل الرئيسي (Hero & Layout)</div>
+                    <iframe src="item/index2.html" loading="lazy" title="New Layout"></iframe>
+                </div>
+                <div class="card-back">
+                    <span class="card-badge">الماضي v1.0 🕰️</span>
+                    <div class="section-tag">قسـم الترحيب والهيكل الرئيسي (Hero & Layout)</div>
+                    <iframe src="item/index.html" loading="lazy" title="Old Layout"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-badge">الحاضر v2.0 🚀</span>
+                    <div class="section-tag">منظومة الألوان والتناسق البصري (Color Palette)</div>
+                    <iframe src="item/index2.html" loading="lazy" title="New Colors"></iframe>
+                </div>
+                <div class="card-back">
+                    <span class="card-badge">الماضي v1.0 🕰️</span>
+                    <div class="section-tag">منظومة الألوان والتناسق البصري (Color Palette)</div>
+                    <iframe src="item/index.html" loading="lazy" title="Old Colors"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-badge">الحاضر v2.0 🚀</span>
+                    <div class="section-tag">تجربة القراءة وتوزيع الخطوط (Typography)</div>
+                    <iframe src="item/index2.html" loading="lazy" title="New Typography"></iframe>
+                </div>
+                <div class="card-back">
+                    <span class="card-badge">الماضي v1.0 🕰️</span>
+                    <div class="section-tag">تجربة القراءة وتوزيع الخطوط (Typography)</div>
+                    <iframe src="item/index.html" loading="lazy" title="Old Typography"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-container" onclick="flipCard(this)">
+            <div class="card-inner">
+                <div class="card-front">
+                    <span class="card-badge">الحاضر v2.0 🚀</span>
+                    <div class="section-tag">المكونات الذكية والأزرار (UI Components)</div>
+                    <iframe src="item/index2.html" loading="lazy" title="New Components"></iframe>
+                </div>
+                <div class="card-back">
+                    <span class="card-badge">الماضي v1.0 🕰️</span>
+                    <div class="section-tag">المكونات الذكية والأزرار (UI Components)</div>
+                    <iframe src="item/index.html" loading="lazy" title="Old Components"></iframe>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // دالة قلب البطاقة التفاعلية
+        function flipCard(container) {
+            const innerCard = container.querySelector('.card-inner');
+            
+            // 1. تفعيل نصيحتك التقنية: إضافة كلاس يمنع أحداث الماوس عن الـ iframe فوراً عند بدء الحركة
+            innerCard.classList.add('is-flipping');
+            
+            // 2. تدوير البطاقة عن طريق تبديل كلاس flipped للوعاء الخارجي
+            container.classList.toggle('flipped');
+            
+            // 3. بمجرد انتهاء أنميشن الدوران (يستغرق 800 مللي ثانية في الـ CSS)، نعيد أحداث الماوس للـ iframe ليتصفحه المستخدم بشكل طبيعي
+            setTimeout(() => {
+                innerCard.classList.remove('is-flipping');
+            }, 800);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عدسة الزمن - مقارنة التصميم الأولي والنهائي</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #111;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            cursor: none; /* إخفاء ماوس المستخدم الافتراضي لتعويضه بالعدسة */
+        }
+
+        /* حاوية المشروع بالكامل */
+        .lens-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* التصميم المشترك للطبقات */
+        .page-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            /* لمنع تداخل الأحداث أثناء تحريك العدسة */
+            pointer-events: auto; 
+        }
+
+        /* الطبقة الأساسية: الموقع الجديد (يعرض في الخلفية دائمًا) */
+        .layer-new {
+            z-index: 1;
+        }
+
+        /* الطبقة العلوية: الموقع القديم (يتم قصه على شكل دائرة متحركة) */
+        .layer-old {
+            z-index: 2;
+            /* تبدأ العدسة مخفية خارج الشاشة أو في المنتصف، وسيتحكم بها الجافاسكريبت */
+            clip-path: circle(0px at 0px 0px); 
+            transition: clip-path 0.02s linear;
+            pointer-events: none; /* لتمرير النقرات للموقع بالأسفل إن لزم الأمر */
+        }
+
+        /* شكل حدود العدسة البصري والـ Glow */
+        .lens-pointer {
+            position: absolute;
+            width: 250px; /* قطر عدسة الزمن */
+            height: 250px;
+            border: 4px solid #ff4a4a; /* لون أحمر كلاسيكي ليرمز للماضي */
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff4a4a, inset 0 0 15px rgba(255, 74, 74, 0.3);
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* لكي لا تعيق العدسة حركة الماوس */
+            z-index: 3;
+            top: -999px;
+            left: -999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* نص صغير داخل العدسة (اختياري) */
+        .lens-text {
+            color: #ff4a4a;
+            font-size: 11px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 2px 6px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        /* شارة إرشادية للمستخدم في الأعلى */
+        .instruction-badge {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            z-index: 10;
+            pointer-events: none;
+            border: 1px solid #00ffcc;
+            box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+            text-align: center;
+        }
+        .instruction-badge span {
+            color: #ff4a4a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="instruction-badge">
+        الموقع الحالي في الخلفية.. حرك الماوس لرؤية <span>التصميم الأولي (الماضي)</span> داخل العدسة 🕰️
+    </div>
+
+    <div class="lens-container" id="scene">
+        
+        <div class="page-layer layer-new">
+            <iframe src="item/index2.html" title="New Design"></iframe>
+        </div>
+
+        <div class="page-layer layer-old" id="oldLayer">
+            <iframe src="item/index.html" title="Old Design"></iframe>
+        </div>
+
+        <div class="lens-pointer" id="lens">
+            <div class="lens-text">الماضي v1.0</div>
+        </div>
+
+    </div>
+
+    <script>
+        const scene = document.getElementById('scene');
+        const oldLayer = document.getElementById('oldLayer');
+        const lens = document.getElementById('lens');
+
+        // حجم نصف قطر العدسة (125px لأن القطر الكلي 250px)
+        const lensRadius = 125; 
+
+        // دالة تحديث مكان العدسة والقناع بناءً على الإحداثيات
+        function updateLensPosition(x, y) {
+            // 1. تحريك الدائرة المرئية (الموقع القديم) باستخدام clip-path
+            oldLayer.style.clipPath = `circle(${lensRadius}px at ${x}px ${y}px)`;
+            
+            // 2. تحريك الإطار المضيء للعدسة ليطابق نفس مكان الماوس
+            lens.style.left = `${x}px`;
+            lens.style.top = `${y}px`;
+        }
+
+        // تتبع حركة ماوس الكمبيوتر
+        window.addEventListener('mousemove', (e) => {
+            updateLensPosition(e.clientX, e.clientY);
+        });
+
+        // دعم الشاشات الذكية والهواتف (اللمس)
+        window.addEventListener('touchmove', (e) => {
+            // إخفاء الرسالة الإرشادية عند اللمس لمنع حجب الرؤية
+            document.querySelector('.instruction-badge').style.opacity = '0.3';
+            
+            const touch = e.touches[0];
+            updateLensPosition(touch.clientX, touch.clientY);
+        });
+
+        // إخفاء العدسة عند خروج الماوس من الشاشة
+        scene.addEventListener('mouseleave', () => {
+            oldLayer.style.clipPath = `circle(0px at 0px 0px)`;
+            lens.style.top = '-999px';
+            lens.style.left = '-999px';
+        });
+    </script>
+</body>
+</html>
